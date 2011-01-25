@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="hello">Hello World, MyTwitterActivity!</string>
+    <string name="app_name">MyTwitter</string>
+    <string name="nodata">No data</string>
+    <string name="update_status">Update Status</string>
+    <string name="updating">Updating...</string>
+    <string name="update_successful">Update Successful</string>
+    <string name="update_unsuccessful">Update Unsuccessful</string>
+    <string name="more">More</string>
+    <string name="retrieving">Retrieving...</string>
+    <string name="new_timeline">Update New</string>
+    <string name="refresh_timeline">Refresh</string>
+    <string name="status_count">%1$d/%2$d</string>
+    <string name="options">Options</string>
+    <string name="retweet">ReTweet</string>
+    <string name="retweet_with_comment">ReTweet with comment</string>
+    <string name="retweet_successful">ReTweet Successful</string>
+    <string name="reply">Reply</string>
+</resources>
