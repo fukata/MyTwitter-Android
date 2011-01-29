@@ -34,12 +34,12 @@
 		<link>
 			<name>ExAndroid</name>
 			<type>2</type>
-			<location>/home/tatsuya/workspace/android/ExAndroid/src/java</location>
+			<location>/home/tatsuya/workspace/git/ExAndroid/src/java</location>
 		</link>
 		<link>
 			<name>xstream-for-android</name>
 			<type>2</type>
-			<location>/home/tatsuya/workspace/android/xstream-for-android/src/java</location>
+			<location>/home/tatsuya/workspace/git/xstream-for-android/xstream/src/java</location>
 		</link>
 	</linkedResources>
 </projectDescription>
