@@ -9,6 +9,7 @@ import org.fukata.android.exandroid.loader.process.BaseRequest;
 import org.fukata.android.exandroid.loader.process.ProcessLoader;
 import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.twitter.Twitter;
+import org.fukata.android.mytw.util.SettingUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,6 +34,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	static final int UPDATE_TIMELINE_CHECK_INVERVAL = 10000;
 	
 	static final int RS_CODE_UPDATE_STATUS = 1;
+	static final int RS_CODE_RECONFIG = 2;
 	
 	static final int MENU_UPDATE_STATUS = Menu.FIRST + 1;
 	static final int MENU_NEW_TIMELINE = Menu.FIRST + 2;
@@ -61,6 +63,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.timeline);
+        SettingUtil.init(this);
         View footerView = getLayoutInflater().inflate(R.layout.timeline_footer, null);
         more = (Button) footerView.findViewById(R.id.more);
         more.setOnClickListener(this);
@@ -160,6 +163,8 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (RS_CODE_UPDATE_STATUS==requestCode) {
 			loadTimeline(LoadMode.NEW);
+		} else if (RS_CODE_RECONFIG==requestCode) {
+			loadTimeline(LoadMode.REFRESH);
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

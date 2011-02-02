@@ -15,20 +15,29 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.TimelineItem;
 import org.fukata.android.mytw.twitter.rs.Status;
 import org.fukata.android.mytw.twitter.rs.User;
+import org.fukata.android.mytw.util.SettingUtil;
 
 import com.thoughtworks.xstream.XStream;
 
 
 public class Twitter {
 	static final String CHARSET = "UTF-8";
-	static final String API_PREFIX = "http://example.com";
 	XStream xStream;
 	
 	public Twitter() {
 		xStream = new XStream();
+	}
+	
+	private String getApiPrefix() {
+		String url = SettingUtil.getApiServerUrl();
+		if (StringUtil.isNotBlank(url) && url.endsWith("/")) {
+			url = url.substring(0, url.length()-1);
+		}
+		return url;
 	}
 	
 	public List<TimelineItem> getHomeTimeline() {
@@ -51,7 +60,7 @@ public class Twitter {
 		HttpParams params = new BasicHttpParams();
 		List<TimelineItem> list = new ArrayList<TimelineItem>();
 		DefaultHttpClient client = new DefaultHttpClient(params);
-		StringBuilder url = new StringBuilder(API_PREFIX+"/statuses/home_timeline/");
+		StringBuilder url = new StringBuilder(getApiPrefix()+"/statuses/home_timeline/");
 		if (parameters!=null && parameters.size()>0) {
 			URLEncodedUtils.format(parameters, CHARSET);
 			for (int i=0; i<parameters.size(); i++) {
@@ -93,7 +102,7 @@ public class Twitter {
 	public boolean updateStatus(String status) {
 		HttpParams params = new BasicHttpParams();
 		DefaultHttpClient client = new DefaultHttpClient(params);
-		HttpPost method = new HttpPost(API_PREFIX+"/statuses/update/");
+		HttpPost method = new HttpPost(getApiPrefix()+"/statuses/update/");
 		String xml = null;
 		try {
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
@@ -110,7 +119,7 @@ public class Twitter {
 	public boolean postReTweet(String statusId) {
 		HttpParams params = new BasicHttpParams();
 		DefaultHttpClient client = new DefaultHttpClient(params);
-		HttpPost method = new HttpPost(API_PREFIX+"/statuses/retweet/");
+		HttpPost method = new HttpPost(getApiPrefix()+"/statuses/retweet/");
 		String xml = null;
 		try {
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>();

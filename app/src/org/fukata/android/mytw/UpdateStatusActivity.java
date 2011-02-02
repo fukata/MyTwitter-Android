@@ -7,6 +7,7 @@ import org.fukata.android.exandroid.loader.process.BaseRequest;
 import org.fukata.android.exandroid.loader.process.ProcessLoader;
 import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.twitter.Twitter;
+import org.fukata.android.mytw.util.SettingUtil;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,6 +38,8 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.update_status);
+		SettingUtil.init(this);
+		
 		updateStatus = (Button) findViewById(R.id.update_status);
 		updateStatus.setOnClickListener(this);
 		statusCount = (TextView) findViewById(R.id.status_count);
