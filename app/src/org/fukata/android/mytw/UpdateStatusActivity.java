@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -22,6 +24,8 @@ import android.widget.Toast;
 
 public class UpdateStatusActivity extends Activity implements OnClickListener {
 	final static int STATUS_MAX = 140;
+	
+	final static int MENU_UPDATE_STATUS = Menu.FIRST + 1;
 	
 	ProcessLoader updateStatusLoader;
 	Twitter twitter;
@@ -124,38 +128,58 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.update_status:
-			final String st = status.getText().toString();
-			if (StringUtil.isNotBlank(st)) {
-				updateStatus.setEnabled(false);
-				updateStatus.setText(R.string.updating);
-				
-				final List<Boolean> rs = new ArrayList<Boolean>();
-				Runnable successCallback = new Runnable() {
-					@Override
-					public void run() {
-						if (rs.size()>0 && rs.get(0)) {
-							Toast.makeText(getApplicationContext(), getText(R.string.update_successful), Toast.LENGTH_LONG).show();
-							finishActivity(TimelineActivity.RS_CODE_UPDATE_STATUS);
-							finish();
-						} else {
-							Toast.makeText(getApplicationContext(), getText(R.string.update_unsuccessful), Toast.LENGTH_LONG).show();
-							updateStatus.setText(R.string.update_status);
-							updateStatus.setEnabled(true);
-						}
-					}
-				};
-				updateStatusLoader.load(new BaseRequest(successCallback, null) {
-					@Override
-					public void processRequest(ProcessLoader loader) {
-						rs.add(twitter.updateStatus(st));
-						super.processRequest(loader);
-					}
-				});
-			}
+			updateStatus();
 			break;
 		default:
 			break;
 		}
 	}
+	
+	public void updateStatus() {
+		final String st = status.getText().toString();
+		if (StringUtil.isNotBlank(st)) {
+			updateStatus.setEnabled(false);
+			updateStatus.setText(R.string.updating);
+			
+			final List<Boolean> rs = new ArrayList<Boolean>();
+			Runnable successCallback = new Runnable() {
+				@Override
+				public void run() {
+					if (rs.size()>0 && rs.get(0)) {
+						Toast.makeText(getApplicationContext(), getText(R.string.update_successful), Toast.LENGTH_LONG).show();
+						finishActivity(TimelineActivity.RS_CODE_UPDATE_STATUS);
+						finish();
+					} else {
+						Toast.makeText(getApplicationContext(), getText(R.string.update_unsuccessful), Toast.LENGTH_LONG).show();
+						updateStatus.setText(R.string.update_status);
+						updateStatus.setEnabled(true);
+					}
+				}
+			};
+			updateStatusLoader.load(new BaseRequest(successCallback, null) {
+				@Override
+				public void processRequest(ProcessLoader loader) {
+					rs.add(twitter.updateStatus(st));
+					super.processRequest(loader);
+				}
+			});
+		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(Menu.NONE, MENU_UPDATE_STATUS, Menu.NONE, R.string.update_status);
+		return super.onCreateOptionsMenu(menu);
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_UPDATE_STATUS:
+			updateStatus();
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }
