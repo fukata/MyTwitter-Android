@@ -6,7 +6,7 @@
 		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/account_name" android:layout_weight="1" />
 	</LinearLayout>
 	<TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/api_server" />
-	<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/api_server_url" android:singleLine="true" android:hint="http://example.com/" android:maxLength="256"/>
+	<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/api_server_url" android:singleLine="true" android:hint="http://example.com/" android:maxLength="256" android:inputType="textUri"/>
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/font_size" />
 		<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/font_size" android:entries="@array/font_size_labels"/>
