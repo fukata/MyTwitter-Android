@@ -3,6 +3,8 @@ package org.fukata.android.mytw.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.fukata.android.mytw.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -16,8 +18,10 @@ public enum SettingUtil {
 	
 	private static final String NAME = "mytw";
 	private static SharedPreferences preferences;
+	private static Context context;
 	
 	public static void init(Context context) {
+		SettingUtil.context = context;
 		preferences = context.getSharedPreferences(NAME, Context.MODE_WORLD_READABLE|Context.MODE_WORLD_WRITEABLE);
 	}
 
@@ -43,7 +47,17 @@ public enum SettingUtil {
 		return preferences.getString(KEY_API_SERVER_URL, null);
 	}
 	
-	public static int getFontSize() {
+	public static int getFontSizeIndex() {
 		return preferences.getInt(KEY_FONT_SIZE, 0);
+	}
+
+	public static float getFontSize() {
+		int i = getFontSizeIndex();
+		int[] fontSizes = context.getResources().getIntArray(R.array.font_size_values);
+		if (fontSizes.length>i) {
+			return fontSizes[i];
+		} else {
+			return fontSizes[0];
+		}
 	}
 }

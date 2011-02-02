@@ -8,7 +8,7 @@
 				android:layout_height="wrap_content" android:id="@+id/timeline_username" style="@style/username">
 			</TextView>
 			<TextView android:layout_width="wrap_content"
-				android:layout_height="wrap_content" android:layout_marginLeft="5px" android:text="from" style="@style/default_text">
+				android:layout_height="wrap_content" android:layout_marginLeft="5px" android:text="from" style="@style/default_text" android:id="@+id/timeline_from">
 			</TextView>
 			<TextView android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:layout_marginLeft="5px" android:id="@+id/timeline_source" style="@style/default_text">

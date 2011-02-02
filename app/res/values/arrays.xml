@@ -6,10 +6,10 @@
     	<item>16px</item>
     	<item>18px</item>
     </string-array>
-    <string-array name="font_size_values">
-    	<item>12px</item>
-    	<item>14px</item>
-    	<item>16px</item>
-    	<item>18px</item>
-    </string-array>
+    <integer-array name="font_size_values">
+    	<item>12</item>
+    	<item>14</item>
+    	<item>16</item>
+    	<item>18</item>
+    </integer-array>
 </resources>

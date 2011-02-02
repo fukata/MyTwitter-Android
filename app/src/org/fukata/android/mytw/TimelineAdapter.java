@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.fukata.android.mytw.util.PrettyDateUtil;
+import org.fukata.android.mytw.util.SettingUtil;
 
 import android.content.Context;
 import android.text.Html;
@@ -48,8 +49,19 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 		// status
 		TextView status = (TextView) view.findViewById(R.id.timeline_status);
 		status.setText(decorateStatus(item.getStatus()));
+
+		updateTextSize(view);
 		
 		return view;
+	}
+
+	private void updateTextSize(View view) {
+		float size = SettingUtil.getFontSize();
+		((TextView) view.findViewById(R.id.timeline_username)).setTextSize(size);
+		((TextView) view.findViewById(R.id.timeline_from)).setTextSize(size);
+		((TextView) view.findViewById(R.id.timeline_source)).setTextSize(size);
+		((TextView) view.findViewById(R.id.timeline_created_at)).setTextSize(size);
+		((TextView) view.findViewById(R.id.timeline_status)).setTextSize(size);
 	}
 
 	CharSequence decorateStatus(String status) {

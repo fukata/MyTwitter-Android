@@ -25,7 +25,7 @@ public class SettingsActivity extends Activity {
 	
 	private void initFields() {
 		apiServerUrl.setText(SettingUtil.getApiServerUrl());
-		fontSizes.setSelection(SettingUtil.getFontSize());
+		fontSizes.setSelection(SettingUtil.getFontSizeIndex());
 	}
 
 	@Override
