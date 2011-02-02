@@ -37,6 +37,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	static final int MENU_UPDATE_STATUS = Menu.FIRST + 1;
 	static final int MENU_NEW_TIMELINE = Menu.FIRST + 2;
 	static final int MENU_REFRESH_TIMELINE = Menu.FIRST + 3;
+	static final int MENU_SETTINGS = Menu.FIRST + 4;
 	
 	static final String INTENT_EXTRA_SELECTION = "selection";
 	static final int INTENT_EXTRA_SELECTION_HEAD = 1;
@@ -118,14 +119,16 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 		menu.add(Menu.NONE, MENU_UPDATE_STATUS, Menu.NONE, R.string.update_status);
 		menu.add(Menu.NONE, MENU_NEW_TIMELINE, Menu.NONE, R.string.new_timeline);
 		menu.add(Menu.NONE, MENU_REFRESH_TIMELINE, Menu.NONE, R.string.refresh_timeline);
+		menu.add(Menu.NONE, MENU_SETTINGS, Menu.NONE, R.string.settings);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
 		case MENU_UPDATE_STATUS:
-			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent = new Intent(Intent.ACTION_VIEW);
 			intent.setClass(this, UpdateStatusActivity.class);
 			startActivity(intent);
 			break;
@@ -135,7 +138,11 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 		case MENU_REFRESH_TIMELINE:
 			loadTimeline(LoadMode.REFRESH);
 			break;
-
+		case MENU_SETTINGS:
+			intent = new Intent(Intent.ACTION_VIEW);
+			intent.setClass(this, SettingsActivity.class);
+			startActivity(intent);
+			break;
 		default:
 			break;
 		}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="font_size_labels">
+    	<item>12px</item>
+    	<item>14px</item>
+    	<item>16px</item>
+    	<item>18px</item>
+    </string-array>
+    <string-array name="font_size_values">
+    	<item>12px</item>
+    	<item>14px</item>
+    	<item>16px</item>
+    	<item>18px</item>
+    </string-array>
+</resources>
