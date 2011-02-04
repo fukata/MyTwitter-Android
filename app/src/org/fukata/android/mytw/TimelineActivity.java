@@ -185,6 +185,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			}
 		});
 	}
+	private int incrementCount = 0; //FIXME フィールド変数に一時的に使用する変数を定義しているが、良い方法ではないので代替方法があれば、修正してください。
 	
 	private void loadTimeline(final LoadMode mode) {
 		preLoadTimeline(mode);
@@ -192,18 +193,26 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 		Runnable successCallback = new Runnable() {
 			@Override
 			public void run() {
+				int lastSelectedItemIndex = TimelineActivity.this.getSelectedItemPosition();
 				processUpdateTimeline(mode, timeline);
+				if (mode == LoadMode.NEW && lastSelectedItemIndex > -1) {
+					//新しい選択位置を設定する。
+					TimelineActivity.this.setSelection(lastSelectedItemIndex + incrementCount);
+				}
 				lastUpdateTimeline = System.currentTimeMillis();
 			};
 		};
 		timelineLoader.load(new BaseRequest(successCallback, null) {
 			@Override
 			public void processRequest(ProcessLoader loader) {
+				incrementCount = 0;
 				List<TimelineItem> list = null;
 				if (LoadMode.REFRESH==mode) {
 					list = twitter.getHomeTimeline();
 				} else if (LoadMode.NEW==mode) {
 					list = twitter.getNewHomeTimeline(latestStatuseId);
+					incrementCount = list.size();
+					System.err.println("incrementCount:" + list.size());
 				} else if (LoadMode.MORE==mode) {
 					list = twitter.getMoreHomeTimeline(lastStatuseId);
 				}
