@@ -21,7 +21,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 	LayoutInflater inflater; 
 	List<TimelineItem> items;
 	static final Pattern USERNAME_PATTERN = Pattern.compile("(\\.?@[\\w]+)");
-	static final Pattern URL_PATTERN = Pattern.compile("(https?://)[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+");
+	static final Pattern URL_PATTERN = Pattern.compile("(https?://)[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+\\@\\,\\_\\!\\*\\(\\)]+");
 	
 	public TimelineAdapter(Context context,	List<TimelineItem> items) {
 		super(context, android.R.layout.simple_list_item_1, items);
