@@ -12,4 +12,20 @@
     	<item>16</item>
     	<item>18</item>
     </integer-array>
+    <string-array name="auto_interval_labels">
+    	<item>なし</item>
+    	<item>1分</item>
+    	<item>5分</item>
+    	<item>10分</item>
+    	<item>15分</item>
+    	<item>30分</item>
+    </string-array>
+    <integer-array name="auto_interval_values">
+    	<item>0</item>
+    	<item>1</item>
+    	<item>5</item>
+    	<item>10</item>
+    	<item>15</item>
+    	<item>30</item>
+    </integer-array>
 </resources>

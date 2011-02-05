@@ -17,6 +17,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,7 +87,8 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			@Override
 			public void run() {
 				long now = System.currentTimeMillis();
-				if (now > lastUpdateTimeline+UPDATE_TIMELINE_INTERVAL) {
+				int interval = SettingUtil.getAutoInterval()*1000;
+				if (now > lastUpdateTimeline+interval) {
 					// 他に更新中の場合はエンキューを行わない。
 					if (timelineLoader.getLoaderQueue().size()==0) {
 						loadTimeline(LoadMode.NEW);
@@ -194,6 +196,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			@Override
 			public void run() {
 				int lastSelectedItemIndex = TimelineActivity.this.getSelectedItemPosition();
+				Log.d("TimelineActivity", "lastSelectedItemIndex="+lastSelectedItemIndex);
 				processUpdateTimeline(mode, timeline);
 				if (mode == LoadMode.NEW && lastSelectedItemIndex > -1) {
 					//新しい選択位置を設定する。
