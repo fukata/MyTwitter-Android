@@ -22,10 +22,10 @@
     </string-array>
     <integer-array name="auto_interval_values">
     	<item>0</item>
-    	<item>1</item>
-    	<item>5</item>
-    	<item>10</item>
-    	<item>15</item>
-    	<item>30</item>
+    	<item>60</item>
+    	<item>300</item>
+    	<item>600</item>
+    	<item>900</item>
+    	<item>1800</item>
     </integer-array>
 </resources>

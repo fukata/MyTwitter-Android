@@ -28,6 +28,7 @@ public class SettingsActivity extends Activity {
 	private void initFields() {
 		apiServerUrl.setText(SettingUtil.getApiServerUrl());
 		fontSizes.setSelection(SettingUtil.getFontSizeIndex());
+		autoIntervals.setSelection(SettingUtil.getAutoIntervalIndex());
 	}
 
 	@Override
@@ -38,5 +39,8 @@ public class SettingsActivity extends Activity {
 		// font size
 		int size = fontSizes.getSelectedItemPosition();
 		SettingUtil.setFontSize(size);
+		// auto interval
+		int interval = autoIntervals.getSelectedItemPosition();
+		SettingUtil.setAutoInterval(interval);
 	}
 }
