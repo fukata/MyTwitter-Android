@@ -23,13 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TimelineActivity extends ListActivity implements OnClickListener, OnItemLongClickListener {
+public class TimelineActivity extends ListActivity implements OnClickListener, OnItemClickListener, OnItemLongClickListener {
 	// 定期的に最新のツイートを取得する間隔
 	static final int UPDATE_TIMELINE_INTERVAL = 60000;
 	static final int UPDATE_TIMELINE_CHECK_INVERVAL = 10000;
@@ -46,6 +47,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	static final int INTENT_EXTRA_SELECTION_HEAD = 1;
 	static final int INTENT_EXTRA_SELECTION_END = 2;
 	
+	
 	Button more;
     TimelineAdapter adapter;
 	List<TimelineItem> statuses;
@@ -57,6 +59,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	
 	long lastUpdateTimeline = System.currentTimeMillis();
 	Timer intervalUpdateTimer;
+	int lastSelectedPosition = -1;
 	
 	ItemDialog itemDialog;
 	
@@ -76,6 +79,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         adapter = new TimelineAdapter(this, statuses);
         getListView().addFooterView(footerView);
         getListView().setOnItemLongClickListener(this);
+        getListView().setOnItemClickListener(this);
         setListAdapter(adapter);
         
         attachUpdateInterval();
@@ -88,7 +92,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			public void run() {
 				long now = System.currentTimeMillis();
 				int interval = SettingUtil.getAutoInterval()*1000;
-				if (now > lastUpdateTimeline+interval) {
+				if (interval>0 && now>lastUpdateTimeline+interval) {
 					// 他に更新中の場合はエンキューを行わない。
 					if (timelineLoader.getLoaderQueue().size()==0) {
 						loadTimeline(LoadMode.NEW);
@@ -195,12 +199,15 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 		Runnable successCallback = new Runnable() {
 			@Override
 			public void run() {
-				int lastSelectedItemIndex = TimelineActivity.this.getSelectedItemPosition();
-				Log.d("TimelineActivity", "lastSelectedItemIndex="+lastSelectedItemIndex);
+				Log.d("TimelineActivity", "lastSelectedPosition="+lastSelectedPosition);
 				processUpdateTimeline(mode, timeline);
-				if (mode == LoadMode.NEW && lastSelectedItemIndex > -1) {
+				if (mode == LoadMode.NEW && lastSelectedPosition > -1) {
 					//新しい選択位置を設定する。
-					TimelineActivity.this.setSelection(lastSelectedItemIndex + incrementCount);
+					TimelineActivity.this.setSelection(lastSelectedPosition + incrementCount);
+					lastSelectedPosition = lastSelectedPosition + incrementCount;
+				} else if (mode == LoadMode.REFRESH) {
+					//選択位置をリセット
+					lastSelectedPosition = -1;
 				}
 				lastUpdateTimeline = System.currentTimeMillis();
 			};
@@ -286,9 +293,24 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			return false;
 		}
 
+		lastSelectedPosition = position;
 		itemDialog.show(item);
 		return false;
-	};
+	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		if (statuses.size()<=position) {
+			return;
+		}
+		
+		TimelineItem item = statuses.get(position);
+		if (item==null) {
+			return;
+		}
+		
+		lastSelectedPosition = position;
+	}
 	
 	class ItemDialog extends AlertDialog.Builder {
 		ListView optionsView;
@@ -334,4 +356,5 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			create().show();
 		}
 	}
+
 }
