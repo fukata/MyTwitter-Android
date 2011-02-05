@@ -10,6 +10,7 @@ import android.widget.Spinner;
 public class SettingsActivity extends Activity {
 	EditText apiServerUrl;
 	Spinner fontSizes;
+	Spinner autoIntervals;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +20,7 @@ public class SettingsActivity extends Activity {
 		
 		apiServerUrl = (EditText) findViewById(R.id.api_server_url);
 		fontSizes = (Spinner) findViewById(R.id.font_size);
+		autoIntervals = (Spinner) findViewById(R.id.auto_interval);
 		
 		initFields();
 	}

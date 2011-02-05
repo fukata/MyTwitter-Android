@@ -15,6 +15,7 @@ public enum SettingUtil {
 	
 	private static final String KEY_API_SERVER_URL = "api_server_url";
 	private static final String KEY_FONT_SIZE = "font_size";
+	private static final String KEY_AUTO_INTERVAL = "auto_interval";
 	
 	private static final String NAME = "mytw";
 	private static SharedPreferences preferences;
@@ -43,6 +44,12 @@ public enum SettingUtil {
 		return edit.commit();
 	}
 	
+	public static boolean setAutoInterval(int interval) {
+		Editor edit = preferences.edit();
+		edit.putInt(KEY_AUTO_INTERVAL, interval);
+		return edit.commit();
+	}
+	
 	public static String getApiServerUrl() {
 		return preferences.getString(KEY_API_SERVER_URL, null);
 	}
@@ -60,4 +67,23 @@ public enum SettingUtil {
 			return fontSizes[0];
 		}
 	}
+	
+	public static boolean isAutoIntervalEnabled() {
+		return getAutoIntervalIndex()>0;
+	}
+	
+	public static int getAutoIntervalIndex() {
+		return preferences.getInt(KEY_AUTO_INTERVAL, 0);
+	}
+	
+	public static int getAutoInterval() {
+		int i = getAutoIntervalIndex();
+		int[] intervals = context.getResources().getIntArray(R.array.auto_interval_values);
+		if (intervals.length>i) {
+			return intervals[i];
+		} else {
+			return intervals[0];
+		}
+	}
 }
+
