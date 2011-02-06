@@ -14,6 +14,7 @@ import org.fukata.android.mytw.util.SettingUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -83,7 +84,24 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         setListAdapter(adapter);
         
         attachUpdateInterval();
+        processIntent(getIntent());
     }
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		processIntent(intent);
+	}
+	
+	void processIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			doSearch(query);
+		}
+	}
+	
+	void doSearch(String query) {
+		Toast.makeText(getApplicationContext(), "Search: "+query, Toast.LENGTH_LONG).show();
+	}
 	
 	private void attachUpdateInterval() {
 		intervalUpdateTimer = new Timer();

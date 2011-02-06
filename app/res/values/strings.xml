@@ -22,4 +22,6 @@
     <string name="api_server">API Server:</string>
     <string name="font_size">Font Size:</string>
     <string name="auto_interval">Auto Interval:</string>
+    <string name="search_label">Search</string>
+    <string name="search_hint">example</string>
 </resources>
