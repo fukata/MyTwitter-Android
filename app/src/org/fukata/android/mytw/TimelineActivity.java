@@ -47,7 +47,6 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	static final int INTENT_EXTRA_SELECTION_HEAD = 1;
 	static final int INTENT_EXTRA_SELECTION_END = 2;
 	
-	
 	Button more;
     TimelineAdapter adapter;
 	List<TimelineItem> statuses;
@@ -75,7 +74,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         twitter = new Twitter();
         timelineLoader = new ProcessLoader(this);
         statuses = new ArrayList<TimelineItem>();
-        adapter = new TimelineAdapter(this, statuses);
+        adapter = newInstanceTimelineAdapter();
         getListView().addFooterView(footerView);
         getListView().setOnItemLongClickListener(this);
         setListAdapter(adapter);
@@ -84,6 +83,10 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         processIntent(getIntent());
     }
 	
+	TimelineAdapter newInstanceTimelineAdapter() {
+		return new TimelineAdapter(this, statuses);
+	}
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		processIntent(intent);
@@ -211,7 +214,12 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	private void loadTimeline(final LoadMode mode) {
 		preLoadTimeline(mode);
 		final List<TimelineItem> timeline = new ArrayList<TimelineItem>();
-		Runnable successCallback = new Runnable() {
+		Runnable successCallback = generateSuccessCallback(timeline, mode);
+		processLoadTimeline(timeline, mode, successCallback);
+	}
+	
+	Runnable generateSuccessCallback(final List<TimelineItem> timeline, final LoadMode mode) {
+		Runnable callback = new Runnable() {
 			@Override
 			public void run() {
 				// 現在表示されている最上のツイート位置
@@ -228,19 +236,23 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 				lastUpdateTimeline = System.currentTimeMillis();
 			};
 		};
+		return callback;
+	}
+
+	void processLoadTimeline(final List<TimelineItem> timeline, final LoadMode mode, Runnable successCallback) {
 		timelineLoader.load(new BaseRequest(successCallback, null) {
 			@Override
 			public void processRequest(ProcessLoader loader) {
 				incrementCount = 0;
 				List<TimelineItem> list = null;
 				if (LoadMode.REFRESH==mode) {
-					list = twitter.getHomeTimeline();
+					list = getTimeline();
 				} else if (LoadMode.NEW==mode) {
-					list = twitter.getNewHomeTimeline(latestStatuseId);
+					list = getNewTimeline(latestStatuseId);
 					incrementCount = list.size();
 					System.err.println("incrementCount:" + list.size());
 				} else if (LoadMode.MORE==mode) {
-					list = twitter.getMoreHomeTimeline(lastStatuseId);
+					list = getMoreTimeline(lastStatuseId);
 				}
 				if (list!=null) {
 					for (TimelineItem item : list) {
@@ -249,7 +261,20 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 				}
 				super.processRequest(loader);
 			}
+
 		});
+	}
+	
+	List<TimelineItem> getMoreTimeline(String lastStatuseId) {
+		return twitter.getMoreHomeTimeline(lastStatuseId);
+	}
+
+	List<TimelineItem> getNewTimeline(String latestStatuseId) {
+		return twitter.getNewHomeTimeline(latestStatuseId);
+	}
+
+	List<TimelineItem> getTimeline() {
+		return twitter.getHomeTimeline();
 	}
 	
 	void processUpdateTimeline(LoadMode mode, final List<TimelineItem> timeline) {

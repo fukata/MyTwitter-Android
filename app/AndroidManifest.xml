@@ -33,6 +33,16 @@
 				<action android:name="android.intent.action.VIEW"></action>
 			</intent-filter>
 		</activity>
+
+		<activity android:name="HomeTimelineActivity">
+			<intent-filter></intent-filter>
+		</activity>
+		<activity android:name="MentionTimlineActivity">
+			<intent-filter></intent-filter>
+		</activity>
+		<activity android:name="DirectMessageTimelineActivity">
+			<intent-filter></intent-filter>
+		</activity>
 	</application>
 	<uses-sdk android:minSdkVersion="8" />
 

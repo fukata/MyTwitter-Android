@@ -55,7 +55,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 		return view;
 	}
 
-	private void updateTextSize(View view) {
+	void updateTextSize(View view) {
 		float size = SettingUtil.getFontSize();
 		((TextView) view.findViewById(R.id.timeline_username)).setTextSize(size);
 		((TextView) view.findViewById(R.id.timeline_from)).setTextSize(size);
