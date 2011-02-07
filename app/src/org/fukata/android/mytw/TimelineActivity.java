@@ -220,7 +220,8 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 				Log.d("TimelineActivity", "firstItemPosition="+firstItemPosition);
 				Log.d("TimelineActivity", "firstItemTop="+firstItemTop);
 				processUpdateTimeline(mode, timeline);
-				if (mode == LoadMode.NEW && firstItemPosition > -1) {
+				// 表示されているツイートが最上部以外の場合
+				if (mode == LoadMode.NEW && firstItemPosition > 0) {
 					//新しい選択位置を設定する。
 					getListView().setSelectionFromTop(firstItemPosition+incrementCount, firstItemTop);
 				}
