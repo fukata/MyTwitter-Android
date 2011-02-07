@@ -2,6 +2,9 @@ package org.fukata.android.mytw;
 
 import java.util.List;
 
+import android.view.View;
+import android.widget.AdapterView;
+
 public class DirectMessageTimelineActivity extends TimelineActivity {
 	@Override
 	TimelineAdapter newInstanceTimelineAdapter() {
@@ -21,5 +24,11 @@ public class DirectMessageTimelineActivity extends TimelineActivity {
 	@Override
 	List<TimelineItem> getMoreTimeline(String lastStatuseId) {
 		return twitter.getMoreDirectMessages(lastStatuseId);
+	}
+	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
+			long id) {
+		return false;
 	}
 }
