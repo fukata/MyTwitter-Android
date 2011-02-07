@@ -3,9 +3,6 @@ package org.fukata.android.mytw;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 
 public class MyTwitterActivity extends TabActivity {
@@ -32,11 +29,11 @@ public class MyTwitterActivity extends TabActivity {
 		
 		host.setCurrentTab(0);
 
-		LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, TAB_HEIGHT);
-		layout.weight = 1;
-		for (int i=0; i<getTabWidget().getTabCount(); i++) {
-			View childAt = getTabWidget().getChildAt(i);
-			childAt.setLayoutParams(layout);
-		}
+//		LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, TAB_HEIGHT);
+//		layout.weight = 1;
+//		for (int i=0; i<getTabWidget().getTabCount(); i++) {
+//			View childAt = getTabWidget().getChildAt(i);
+//			childAt.setLayoutParams(layout);
+//		}
 	}
 }
