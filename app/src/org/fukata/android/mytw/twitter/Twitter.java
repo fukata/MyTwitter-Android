@@ -262,4 +262,22 @@ public class Twitter {
 		}
 		return true;
 	}
+	
+	public boolean deleteDirectMessage(String statusId) {
+		HttpParams params = new BasicHttpParams();
+		DefaultHttpClient client = new DefaultHttpClient(params);
+		HttpPost method = new HttpPost(getApiPrefix()+"/direct_messages/destroy/");
+		String xml = null;
+		try {
+			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
+			parameters.add(new BasicNameValuePair("id", statusId));
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters, CHARSET);
+			method.setEntity(entity);
+			HttpResponse response = client.execute(method);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+		
+	}
 }

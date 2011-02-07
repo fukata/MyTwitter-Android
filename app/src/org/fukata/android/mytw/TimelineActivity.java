@@ -69,7 +69,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         View footerView = getLayoutInflater().inflate(R.layout.timeline_footer, null);
         more = (Button) footerView.findViewById(R.id.more);
         more.setOnClickListener(this);
-        itemDialog = new ItemDialog(this);
+        itemDialog = newInstanceItemDialog();
         
         twitter = new Twitter();
         timelineLoader = new ProcessLoader(this);
@@ -83,6 +83,10 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         processIntent(getIntent());
     }
 	
+	ItemDialog newInstanceItemDialog() {
+		return new ItemDialog(this);
+	}
+
 	TimelineAdapter newInstanceTimelineAdapter() {
 		return new TimelineAdapter(this, statuses);
 	}
@@ -209,6 +213,11 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 			}
 		});
 	}
+	
+	void deleteTweet(final TimelineItem item) {
+		//FIXME 未実装
+	}
+	
 	private int incrementCount = 0; //FIXME フィールド変数に一時的に使用する変数を定義しているが、良い方法ではないので代替方法があれば、修正してください。
 	
 	private void loadTimeline(final LoadMode mode) {

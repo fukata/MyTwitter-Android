@@ -16,6 +16,7 @@
     <string name="retweet">ReTweet</string>
     <string name="retweet_with_comment">ReTweet with comment</string>
     <string name="retweet_successful">ReTweet Successful</string>
+    <string name="delete_successful">Delete Successful</string>
     <string name="reply">Reply</string>
     <string name="settings">Settings</string>
     <string name="account">Account:</string>
@@ -24,4 +25,6 @@
     <string name="auto_interval">Auto Interval:</string>
     <string name="search_label">Search</string>
     <string name="search_hint">example</string>
+    <string name="delete">Delete</string>
+    <string name="direct_message">Direct Message</string>
 </resources>
