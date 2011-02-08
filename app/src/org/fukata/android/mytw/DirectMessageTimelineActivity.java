@@ -87,4 +87,19 @@ public class DirectMessageTimelineActivity extends TimelineActivity {
 			create().show();
 		}
 	}
+	
+	@Override
+	int getNotifyNewTweetTabIndex() {
+		return MyTwitterActivity.TAB_DM;
+	}
+
+	@Override
+	CharSequence getNotifyNewTweetContentTitle() {
+		return getString(R.string.notify_new_direct_message, incrementCount);
+	}
+
+	@Override
+	CharSequence getNotifyNewTweetTcikerText() {
+		return getString(R.string.notify_new_direct_message, incrementCount);
+	}
 }

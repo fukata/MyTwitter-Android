@@ -10,6 +10,10 @@ import android.widget.TabHost;
 
 public class MyTwitterActivity extends TabActivity {
 	static final int TAB_HEIGHT = 45;
+	static final int TAB_HOME = 0;
+	static final int TAB_MENTIONS = 1;
+	static final int TAB_DM = 2;
+	static final String INTENT_EXTRA_SELECT_TAB = "select_tab";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +33,6 @@ public class MyTwitterActivity extends TabActivity {
 		host.addTab(host.newTabSpec("DM")
 				.setIndicator("DM")
 				.setContent(new Intent(this, DirectMessageTimelineActivity.class)));
-		
-		host.setCurrentTab(0);
 
 		LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, TAB_HEIGHT);
 		layout.weight = 1;
@@ -38,5 +40,26 @@ public class MyTwitterActivity extends TabActivity {
 			View childAt = getTabWidget().getChildAt(i);
 			childAt.setLayoutParams(layout);
 		}
+		
+		host.setCurrentTab(0);
+		
+		handleIntent(getIntent());
+	}
+
+	private void handleIntent(Intent intent) {
+		Bundle extras = intent.getExtras();
+		if (extras==null) {
+			return;
+		}
+		
+		int tab = extras.getInt(INTENT_EXTRA_SELECT_TAB, 0);
+		if (tab<getTabWidget().getTabCount()) {
+			getTabHost().setCurrentTab(tab);
+		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 }

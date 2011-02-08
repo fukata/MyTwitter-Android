@@ -14,7 +14,11 @@ import org.fukata.android.mytw.util.SettingUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +51,10 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	static final int INTENT_EXTRA_SELECTION_HEAD = 1;
 	static final int INTENT_EXTRA_SELECTION_END = 2;
 	
+	static final int NOTIFY_NEW_TWEET = 1;
+	static final int NOTIFY_NEW_MENTION = 2;
+	static final int NOTIFY_NEW_DM = 3;
+	
 	Button more;
     TimelineAdapter adapter;
 	List<TimelineItem> statuses;
@@ -61,6 +69,8 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	
 	ItemDialog itemDialog;
 	
+	NotificationManager notificationManager;
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +80,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
         more = (Button) footerView.findViewById(R.id.more);
         more.setOnClickListener(this);
         itemDialog = newInstanceItemDialog();
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         
         twitter = new Twitter();
         timelineLoader = new ProcessLoader(this);
@@ -140,7 +151,8 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if (timelineLoader != null) {
+		
+		if (timelineLoader != null && !SettingUtil.isBackgroundProcessEnabled()) {
 			timelineLoader.stopBackgroundThread();
 		}
 	}
@@ -218,7 +230,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 		//FIXME 未実装
 	}
 	
-	private int incrementCount = 0; //FIXME フィールド変数に一時的に使用する変数を定義しているが、良い方法ではないので代替方法があれば、修正してください。
+	int incrementCount = 0; //FIXME フィールド変数に一時的に使用する変数を定義しているが、良い方法ではないので代替方法があれば、修正してください。
 	
 	private void loadTimeline(final LoadMode mode) {
 		preLoadTimeline(mode);
@@ -237,15 +249,60 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 				Log.d("TimelineActivity", "firstItemPosition="+firstItemPosition);
 				Log.d("TimelineActivity", "firstItemTop="+firstItemTop);
 				processUpdateTimeline(mode, timeline);
-				// 表示されているツイートが最上部以外の場合
-				if (mode == LoadMode.NEW && firstItemPosition > 0) {
-					//新しい選択位置を設定する。
-					getListView().setSelectionFromTop(firstItemPosition+incrementCount, firstItemTop);
-				}
+				processFocusItem(mode,firstItemPosition,firstItemTop);
+				processNotification(mode);
 				lastUpdateTimeline = System.currentTimeMillis();
 			};
 		};
 		return callback;
+	}
+
+	void processNotification(LoadMode mode) {
+		if (hasWindowFocus()) {
+			return;
+		}
+		
+		if (mode == LoadMode.NEW && incrementCount>0) {
+			notificationNewTweet();
+		}
+	}
+	
+	void notificationNewTweet() {
+		int icon = android.R.drawable.ic_menu_info_details;
+		CharSequence tickerText = getNotifyNewTweetTcikerText();
+		long when = System.currentTimeMillis();
+		Notification notification = new Notification(icon, tickerText, when);
+		
+		CharSequence contentTitle = getNotifyNewTweetContentTitle();
+		CharSequence contentText = null;
+		Intent intent = new Intent(this, MyTwitterActivity.class);
+		intent.setAction(Intent.ACTION_VIEW);
+		intent.putExtra(MyTwitterActivity.INTENT_EXTRA_SELECT_TAB, getNotifyNewTweetTabIndex());
+		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
+
+		notificationManager.notify(NOTIFY_NEW_TWEET, notification);
+	}
+
+	int getNotifyNewTweetTabIndex() {
+		return MyTwitterActivity.TAB_HOME;
+	}
+
+	CharSequence getNotifyNewTweetContentTitle() {
+		return getString(R.string.notify_new_tweet, incrementCount);
+	}
+
+	CharSequence getNotifyNewTweetTcikerText() {
+		return getString(R.string.notify_new_tweet, incrementCount);
+	}
+
+	void processFocusItem(LoadMode mode, int firstItemPosition, int firstItemTop) {
+		// 表示されているツイートが最上部以外の場合
+		if (mode == LoadMode.NEW && firstItemPosition > 0) {
+			//新しい選択位置を設定する。
+			getListView().setSelectionFromTop(firstItemPosition+incrementCount, firstItemTop);
+		}
 	}
 
 	void processLoadTimeline(final List<TimelineItem> timeline, final LoadMode mode, Runnable successCallback) {

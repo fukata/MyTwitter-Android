@@ -27,4 +27,9 @@
     <string name="search_hint">example</string>
     <string name="delete">Delete</string>
     <string name="direct_message">Direct Message</string>
+    <string name="notify_new_tweet">Received %1$d new Tweet</string>
+    <string name="notify_new_mention">Received %1$d new Mention</string>
+    <string name="notify_new_direct_message">Received %1$d new DM</string>
+    <string name="background_process">Background Process:</string>
+    <string name="notification">Notification:</string>
 </resources>

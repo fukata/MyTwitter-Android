@@ -16,6 +16,8 @@ public enum SettingUtil {
 	private static final String KEY_API_SERVER_URL = "api_server_url";
 	private static final String KEY_FONT_SIZE = "font_size";
 	private static final String KEY_AUTO_INTERVAL = "auto_interval";
+	private static final String KEY_BACKGROUND_PROCESS = "background_process";
+	private static final String KEY_NOTIFICATION = "notification";
 	
 	private static final String NAME = "mytw";
 	private static SharedPreferences preferences;
@@ -47,6 +49,18 @@ public enum SettingUtil {
 	public static boolean setAutoInterval(int interval) {
 		Editor edit = preferences.edit();
 		edit.putInt(KEY_AUTO_INTERVAL, interval);
+		return edit.commit();
+	}
+	
+	public static boolean setBackgroundProcess(boolean process) {
+		Editor edit = preferences.edit();
+		edit.putBoolean(KEY_BACKGROUND_PROCESS, process);
+		return edit.commit();
+	}
+	
+	public static boolean setNotification(boolean notification) {
+		Editor edit = preferences.edit();
+		edit.putBoolean(KEY_NOTIFICATION, notification);
 		return edit.commit();
 	}
 	
@@ -84,6 +98,14 @@ public enum SettingUtil {
 		} else {
 			return intervals[0];
 		}
+	}
+	
+	public static boolean isBackgroundProcessEnabled() {
+		return preferences.getBoolean(KEY_BACKGROUND_PROCESS, false);
+	}
+	
+	public static boolean isNotificationEnabled() {
+		return preferences.getBoolean(KEY_NOTIFICATION, false);
 	}
 }
 
