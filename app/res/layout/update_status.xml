@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:id="@+id/status_count"
-		android:gravity="right"></TextView>
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+		<Button android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/update_status"
+			android:text="@string/update_status_with_count"></Button>
+	</LinearLayout>
 	<EditText android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_weight="1"
 		android:id="@+id/status" android:inputType="textMultiLine"
 		android:gravity="top" android:focusable="true" android:focusableInTouchMode="true"></EditText>
-	<Button android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:id="@+id/update_status"
-		android:text="@string/update_status"></Button>
 </LinearLayout>

@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class UpdateStatusActivity extends Activity implements OnClickListener {
@@ -32,7 +31,6 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 	Twitter twitter;
 	EditText status;
 	Button updateStatus;
-	TextView statusCount;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,6 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 		
 		updateStatus = (Button) findViewById(R.id.update_status);
 		updateStatus.setOnClickListener(this);
-		statusCount = (TextView) findViewById(R.id.status_count);
 		
 		updateStatusLoader = new ProcessLoader(this);
 		twitter = new Twitter();
@@ -109,8 +106,7 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 	
 	void updateStatusCount() {
 		int length = status.getText().length();
-//		statusCount.setText( String.format(getResources().getString(R.string.status_count), length, STATUS_MAX) );
-		statusCount.setText( getString(R.string.status_count, length, STATUS_MAX) );
+		updateStatus.setText( getString(R.string.update_status_with_count, length, STATUS_MAX) );
 	}
 
 	@Override

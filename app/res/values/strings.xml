@@ -4,6 +4,7 @@
     <string name="app_name">MyTwitter</string>
     <string name="nodata">No data</string>
     <string name="update_status">Update Status</string>
+    <string name="update_status_with_count">Update Status (%1$d/%2$d)</string>
     <string name="updating">Updating...</string>
     <string name="update_successful">Update Successful</string>
     <string name="update_unsuccessful">Update Unsuccessful</string>
