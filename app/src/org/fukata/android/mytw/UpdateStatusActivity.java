@@ -46,12 +46,11 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 		status = (EditText) findViewById(R.id.status);
 		status.addTextChangedListener(new StatusWatcher());
 		
-		attachIntentData();
+		handleIntent(getIntent());
 		updateStatusCount();
 	}
 	
-	void attachIntentData() {
-		Intent intent = getIntent();
+	void handleIntent(Intent intent) {
 		if (intent!=null && intent.getExtras()!=null) {
 			Bundle extras = intent.getExtras();
 			List<String> datas = new ArrayList<String>();
