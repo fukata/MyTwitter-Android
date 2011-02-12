@@ -258,7 +258,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 	}
 
 	void processNotification(LoadMode mode) {
-		if (hasWindowFocus()) {
+		if (hasWindowFocus() || !SettingUtil.isNotificationEnabled()) {
 			return;
 		}
 		
@@ -281,6 +281,7 @@ public class TimelineActivity extends ListActivity implements OnClickListener, O
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		notification.setLatestEventInfo(this, contentTitle, contentText, contentIntent);
+		notification.flags = Notification.FLAG_AUTO_CANCEL;
 
 		notificationManager.notify(NOTIFY_NEW_TWEET, notification);
 	}
