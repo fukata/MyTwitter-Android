@@ -149,7 +149,7 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 						finish();
 					} else {
 						Toast.makeText(getApplicationContext(), getText(R.string.update_unsuccessful), Toast.LENGTH_LONG).show();
-						updateStatus.setText(R.string.update_status);
+						updateStatusCount();
 						updateStatus.setEnabled(true);
 					}
 				}
