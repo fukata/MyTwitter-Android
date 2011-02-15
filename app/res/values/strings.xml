@@ -33,4 +33,7 @@
     <string name="notify_new_direct_message">Received %1$d new DM</string>
     <string name="background_process">Background Process:</string>
     <string name="notification">Notification:</string>
+    <string name="title_home">Home</string>
+    <string name="title_mentions">Mentions</string>
+    <string name="title_dm">DirectMessages</string>
 </resources>

@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.fukata.android.mytw" android:versionName="1.1.0" android:versionCode="3">
+	package="org.fukata.android.mytw" android:versionName="1.1.0"
+	android:versionCode="3">
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
 		android:debuggable="true">
-		<activity android:name=".MyTwitterActivity" android:label="@string/app_name">
+		<activity android:label="@string/app_name" android:name="MyTwitterActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 
-		<activity android:name="TimelineActivity" android:launchMode="singleTop">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW"></action>
-			</intent-filter>
-			<intent-filter android:label="search">
-				<action android:name="android.intent.action.SEARCH"></action>
-			</intent-filter>
-			<meta-data android:resource="@xml/searchable" android:name="android.app.searchable" />
-		</activity>
+		
 		<activity android:name="UpdateStatusActivity">
 			<intent-filter>
 				<action android:name="android.settings.INPUT_METHOD_SETTINGS"></action>
@@ -33,15 +26,9 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name="HomeTimelineActivity">
-			<intent-filter></intent-filter>
-		</activity>
-		<activity android:name="MentionTimlineActivity">
-			<intent-filter></intent-filter>
-		</activity>
-		<activity android:name="DirectMessageTimelineActivity">
-			<intent-filter></intent-filter>
-		</activity>
+		
+		
+		
 	</application>
 	<uses-sdk android:minSdkVersion="8" />
 
