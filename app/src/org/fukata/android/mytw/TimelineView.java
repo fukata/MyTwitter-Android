@@ -97,6 +97,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	
 	void preLoadTimeline(LoadMode mode) {
 		if (LoadMode.REFRESH==mode) {
+			more.setEnabled(false);
+			more.setText(R.string.retrieving);
 		} else if (LoadMode.NEW==mode) {
 		} else if (LoadMode.MORE==mode) {
 			more.setEnabled(false);
@@ -162,6 +164,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	}
 
 	void processUpdateTimeline(LoadMode mode, final List<TimelineItem> timeline) {
+		more.setText(R.string.more);
+		more.setEnabled(true);
 		if (timeline.size()>0) {
 			if (LoadMode.REFRESH==mode) {
 				latestStatuseId = timeline.get(0).getStatusId();
@@ -183,8 +187,6 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				}
 				latestStatuseId = timeline.get(0).getStatusId();
 			} else if (LoadMode.MORE==mode) {
-				more.setText(R.string.more);
-				more.setEnabled(true);
 				for (TimelineItem item : timeline) {
 					if (!StringUtil.equals(lastStatuseId, item.getStatusId())) {
 						adapter.add(item);
