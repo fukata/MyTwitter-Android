@@ -6,44 +6,59 @@ import org.fukata.android.exandroid.loader.process.BaseRequest;
 import org.fukata.android.exandroid.loader.process.ProcessLoader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
-public class DirectMessageTimelineActivity extends TimelineActivity {
-	@Override
-	TimelineAdapter newInstanceTimelineAdapter() {
-		return new DirectMessageTimelineAdapter(this, statuses);
+public class DirectMessageTimelineView extends TimelineView {
+
+	public DirectMessageTimelineView(Context context, TimelineActivity activity) {
+		super(context, activity);
 	}
-	
+
 	@Override
-	List<TimelineItem> getTimeline() {
-		return twitter.getDirectMessages();
-	}
-	
-	@Override
-	List<TimelineItem> getNewTimeline(String latestStatuseId) {
-		return twitter.getNewDirectMessages(latestStatuseId);
+	TimelineAdapter newInstanceTimelineAdapter(Context context, List<TimelineItem> items) {
+		return new DirectMessageTimelineAdapter(context, items);
 	}
 	
 	@Override
 	List<TimelineItem> getMoreTimeline(String lastStatuseId) {
-		return twitter.getMoreDirectMessages(lastStatuseId);
+		Log.d(getClass().getSimpleName(), "getMoreTimeline");
+		return parentActivity.twitter.getMoreDirectMessages(lastStatuseId);
 	}
+
+	@Override
+	List<TimelineItem> getNewTimeline(String latestStatuseId) {
+		Log.d(getClass().getSimpleName(), "getNewTimeline");
+		return parentActivity.twitter.getNewDirectMessages(latestStatuseId);
+	}
+
+	@Override
+	List<TimelineItem> getTimeline() {
+		Log.d(getClass().getSimpleName(), "getTimeline");
+		return parentActivity.twitter.getDirectMessages();
+	}
+
+//	@Override
+//	CharSequence getTitle() {
+//		return parentActivity.getString(R.string.title_dm);
+//	}
 	
 	@Override
 	void deleteTweet(final TimelineItem item) {
 		Runnable successCallback = new Runnable() {
 			@Override
 			public void run() {
-				Toast.makeText(getApplicationContext(), R.string.delete_successful, Toast.LENGTH_LONG).show();
+				Toast.makeText(parentActivity.getApplicationContext(), R.string.delete_successful, Toast.LENGTH_LONG).show();
 				adapter.remove(item);
 			}
 		};
-		timelineLoader.load(new BaseRequest(successCallback, null) {
+		parentActivity.timelineLoader.load(new BaseRequest(successCallback, null) {
 			@Override
 			public void processRequest(ProcessLoader loader) {
-				twitter.deleteDirectMessage(item.getStatusId());
+				parentActivity.twitter.deleteDirectMessage(item.getStatusId());
 				super.processRequest(loader);
 			}
 		});
@@ -51,24 +66,24 @@ public class DirectMessageTimelineActivity extends TimelineActivity {
 	
 	@Override
 	ItemDialog newInstanceItemDialog() {
-		return new DmItemDialog(this);
+		return new DmItemDialog(parentActivity);
 	}
 	
 	class DmItemDialog extends ItemDialog {
 		static final int OPTION_DIRECT_MESSAGE = 0;
 		static final int OPTION_DELETE = 1;
-		
+
 		final String[] options = {
-				getString(R.string.direct_message), 
-				getString(R.string.delete), 
+				parentActivity.getString(R.string.direct_message), 
+				parentActivity.getString(R.string.delete), 
 		};
-		
+
 		public DmItemDialog(Activity activity) {
 			super(activity);
 			this.activity = activity;
 			setTitle(R.string.options);
 		}
-		
+
 		public void show(final TimelineItem item) {
 			setItems(options, new DialogInterface.OnClickListener() {
 				@Override
@@ -77,8 +92,8 @@ public class DirectMessageTimelineActivity extends TimelineActivity {
 						Intent intent = new Intent(Intent.ACTION_SEND);
 						intent.setClass(activity, UpdateStatusActivity.class);
 						intent.putExtra(Intent.EXTRA_TEXT, "d "+item.getUsername()+" ");
-						intent.putExtra(TimelineActivity.INTENT_EXTRA_SELECTION, TimelineActivity.INTENT_EXTRA_SELECTION_END);
-						startActivity(intent);
+						intent.putExtra(MyTwitterApp.INTENT_EXTRA_SELECTION, MyTwitterApp.INTENT_EXTRA_SELECTION_END);
+						parentActivity.startActivity(intent);
 					} else if (OPTION_DELETE==which) {
 						deleteTweet(item);
 					}
@@ -86,20 +101,5 @@ public class DirectMessageTimelineActivity extends TimelineActivity {
 			});
 			create().show();
 		}
-	}
-	
-	@Override
-	int getNotifyNewTweetTabIndex() {
-		return MyTwitterActivity.TAB_DM;
-	}
-
-	@Override
-	CharSequence getNotifyNewTweetContentTitle() {
-		return getString(R.string.notify_new_direct_message, incrementCount);
-	}
-
-	@Override
-	CharSequence getNotifyNewTweetTcikerText() {
-		return getString(R.string.notify_new_direct_message, incrementCount);
 	}
 }

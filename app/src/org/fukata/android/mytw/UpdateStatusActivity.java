@@ -71,9 +71,9 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 			status.setText(sb);
 			
 			// カーソル位置を変更
-			int selection = extras.getInt(TimelineActivity.INTENT_EXTRA_SELECTION);
+			int selection = extras.getInt(MyTwitterApp.INTENT_EXTRA_SELECTION);
 			// カーソルを先頭へ移動
-			if (selection==TimelineActivity.INTENT_EXTRA_SELECTION_HEAD) {
+			if (selection==MyTwitterApp.INTENT_EXTRA_SELECTION_HEAD) {
 				status.setSelection(0, status.getText().length());
 				status.setSelection(0);
 			} else {
@@ -145,7 +145,7 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 				public void run() {
 					if (rs.size()>0 && rs.get(0)) {
 						Toast.makeText(getApplicationContext(), getText(R.string.update_successful), Toast.LENGTH_LONG).show();
-						finishActivity(TimelineActivity.RS_CODE_UPDATE_STATUS);
+						finishActivity(MyTwitterApp.RS_CODE_UPDATE_STATUS);
 						finish();
 					} else {
 						Toast.makeText(getApplicationContext(), getText(R.string.update_unsuccessful), Toast.LENGTH_LONG).show();
