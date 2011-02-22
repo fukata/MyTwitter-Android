@@ -22,6 +22,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 	List<TimelineItem> items;
 	static final Pattern USERNAME_PATTERN = Pattern.compile("(\\.?@[\\w]+)");
 	static final Pattern URL_PATTERN = Pattern.compile("(https?://)[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+\\@\\,\\_\\!\\*\\(\\)]+");
+	static final Pattern HASHTAG_PATTERN = Pattern.compile("(#[\\w]+)");
 	
 	public TimelineAdapter(Context context,	List<TimelineItem> items) {
 		super(context, android.R.layout.simple_list_item_1, items);
@@ -90,6 +91,19 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 			replaced.put(url, true);
 			status = status.replace(url, "<font color=\"aqua\">"+url+"</font>");
 		}
+		
+		// hashtag
+		Matcher hashtagMatcher = HASHTAG_PATTERN.matcher(status);
+		hashtagMatcher.reset();
+		while (hashtagMatcher.find()) {
+			String hashtag = hashtagMatcher.group();
+			if (replaced.containsKey(hashtag)) {
+				continue;
+			}
+			replaced.put(hashtag, true);
+			status = status.replace(hashtag, "<font color=\"fuchsia\">"+hashtag+"</font>");
+		}
+		
 		return Html.fromHtml(status);
 	}
 }
