@@ -12,6 +12,7 @@ import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.TimelineActivity.LoadMode;
 import org.fukata.android.mytw.util.SettingUtil;
 import org.fukata.android.mytw.util.StringMatchUtils;
+import org.fukata.android.mytw.util.StringUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -286,7 +287,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		static final int OPTION_RETWEET = 0;
 		static final int OPTION_RETWEET_WITH_COMMENT = 1;
 		static final int OPTION_REPLY = 2;
-		static final int OPTION_JUMP = 3;
+		static final int OPTION_URLS = 3;
 
 		final String[] options = {
 			parentActivity.getString(R.string.retweet), 
@@ -309,7 +310,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				for (String elm : options) {
 					opList.add(elm);
 				}
-				opList.add(parentActivity.getString(R.string.jump));
+				opList.add(parentActivity.getString(R.string.urls));
 				fixedOptions = opList.toArray(new String[0]);
 			}
 			setItems(fixedOptions, new DialogInterface.OnClickListener() {
@@ -329,15 +330,34 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						intent.putExtra(Intent.EXTRA_TEXT, "@"+item.getUsername()+" ");
 						intent.putExtra(MyTwitterApp.INTENT_EXTRA_SELECTION, MyTwitterApp.INTENT_EXTRA_SELECTION_END);
 						parentActivity.startActivity(intent);
-					} else if (OPTION_JUMP == which) {
+					} else if (OPTION_URLS == which) {
 						List<String> urls = ItemDialog.this.urls;
-						if (urls.size() > 0) {
+						if (urls.size() == 1) {
+							//URLが一つだけなら、そのまま外部ブラウザで開く
 							try {
-								Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
-								parentActivity.startActivity(i);
+								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
+								parentActivity.startActivity(intent);
 							} catch (Exception e) {
 								Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
 							}
+						} else if (urls.size() > 1) {
+							//URLが複数存在するなら、更に選択肢を表示する。
+							String[] urlMenus = new String[urls.size()];
+							for (int i = 0; i < urls.size(); i++) {
+								urlMenus[i] = parentActivity.getString(R.string.jump_to, StringUtils.strimwidth(urls.get(i), 40, "..."));
+							}
+							setItems(urlMenus, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									try {
+										Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(which)));
+										parentActivity.startActivity(intent);
+									} catch (Exception e) {
+										Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
+									}
+								}
+							});
+							create().show();
 						}
 					}
 				}

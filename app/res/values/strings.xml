@@ -33,5 +33,7 @@
     <string name="notify_new_direct_message">Received %1$d new DM</string>
     <string name="background_process">Background Process:</string>
     <string name="notification">Notification:</string>
-<string name="jump">Jump</string>
+
+<string name="urls">URLs</string>
+    <string name="jump_to">Jump to %s</string>
 </resources>
