@@ -1,7 +1,6 @@
 package org.fukata.android.mytw;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +14,9 @@ import org.fukata.android.mytw.util.StringMatchUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +33,8 @@ import android.widget.Toast;
 public class TimelineView extends ListView implements View.OnClickListener, OnItemLongClickListener {
 	// 定期的に最新のツイートを取得する間隔
 	static final int UPDATE_TIMELINE_CHECK_INVERVAL = 10000;
+
+	private static final int NOTIFY_NEW_TWEET = 1;
 	
 	TimelineActivity parentActivity;
 	List<TimelineItem> items;
@@ -46,6 +50,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 
 	boolean isFirstLoad = true;
 	ItemDialog itemDialog;
+	NotificationManager notificationManager;
 
 	public TimelineView(Context context, TimelineActivity activity) {
 		super(context);
@@ -53,6 +58,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		items = new ArrayList<TimelineItem>();
 		adapter = newInstanceTimelineAdapter(context, items);
 		itemDialog = newInstanceItemDialog();
+		notificationManager = (NotificationManager)parentActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 		
         View footerView = activity.getLayoutInflater().inflate(R.layout.timeline_footer, null);
         more = (Button) footerView.findViewById(R.id.more);
@@ -159,7 +165,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				Log.d(getClass().getSimpleName(), "firstItemTop="+firstItemTop);
 				processUpdateTimeline(mode, timeline);
 				processFocusItem(mode,firstItemPosition,firstItemTop);
-//				processNotification(mode);
+				processNotification(mode);
 				lastUpdateTimeline = System.currentTimeMillis();
 			};
 		};
@@ -203,16 +209,27 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		}
 	}
 	
-//	void processNotification(LoadMode mode) {
-//		if (hasWindowFocus() || !SettingUtil.isNotificationEnabled()) {
-//			return;
-//		}
-//		
-//		if (mode == LoadMode.NEW && incrementCount>0) {
-//			notificationNewTweet();
-//		}
-//	}
+	void processNotification(LoadMode mode) {
+		if (hasWindowFocus() || !SettingUtil.isNotificationEnabled()) {
+			return;
+		}
+		
+		if (mode == LoadMode.NEW && lastLoadCount>0) {
+			notificationNewTweet();
+		}
+	}
 	
+	void notificationNewTweet() {
+		String ticker = parentActivity.getString(R.string.notify_new_tweet, lastLoadCount);
+		Intent intent = new Intent(parentActivity, TimelineActivity.class);
+		intent.setAction(Intent.ACTION_VIEW);
+		PendingIntent contentIntent = PendingIntent.getActivity(parentActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		Notification notification = new Notification(android.R.drawable.ic_menu_add, ticker, System.currentTimeMillis());
+		notification.setLatestEventInfo(parentActivity.getApplicationContext(), parentActivity.getString(R.string.app_name), ticker, contentIntent);
+		notification.flags = Notification.FLAG_AUTO_CANCEL;
+		notificationManager.notify(NOTIFY_NEW_TWEET, notification);
+	}
+
 	void processFocusItem(LoadMode mode, int firstItemPosition, int firstItemTop) {
 		// 表示されているツイートが最上部以外の場合
 		if (mode == LoadMode.NEW && firstItemPosition > 0) {
