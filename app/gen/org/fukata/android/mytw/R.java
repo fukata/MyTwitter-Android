@@ -56,7 +56,7 @@ public final class R {
         public static final int direct_message=0x7f06001b;
         public static final int font_size=0x7f060016;
         public static final int hello=0x7f060000;
-        public static final int jump=0x7f060021;
+        public static final int jump_to=0x7f060022;
         public static final int more=0x7f060008;
         public static final int new_timeline=0x7f06000a;
         public static final int nodata=0x7f060002;
@@ -80,6 +80,7 @@ public final class R {
         public static final int update_successful=0x7f060006;
         public static final int update_unsuccessful=0x7f060007;
         public static final int updating=0x7f060005;
+        public static final int urls=0x7f060021;
     }
     public static final class style {
         public static final int created_at=0x7f070002;
