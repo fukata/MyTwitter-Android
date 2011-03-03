@@ -1,6 +1,7 @@
 package org.fukata.android.mytw;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,12 +11,14 @@ import org.fukata.android.exandroid.loader.process.ProcessLoader;
 import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.TimelineActivity.LoadMode;
 import org.fukata.android.mytw.util.SettingUtil;
+import org.fukata.android.mytw.util.StringMatchUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -279,9 +282,11 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		ListView optionsView;
 		ArrayAdapter<String> optionsAdapter;
 		Activity activity;
+		List<String> urls;
 		static final int OPTION_RETWEET = 0;
 		static final int OPTION_RETWEET_WITH_COMMENT = 1;
 		static final int OPTION_REPLY = 2;
+		static final int OPTION_JUMP = 3;
 
 		final String[] options = {
 			parentActivity.getString(R.string.retweet), 
@@ -296,7 +301,18 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		}
 		
 		public void show(final TimelineItem item) {
-			setItems(options, new DialogInterface.OnClickListener() {
+			String[] fixedOptions = options;
+			String source = item.getStatus();
+			urls = StringMatchUtils.getUrls(source);
+			if (urls.size() > 0) {
+				List<String> opList = new ArrayList<String>();
+				for (String elm : options) {
+					opList.add(elm);
+				}
+				opList.add(parentActivity.getString(R.string.jump));
+				fixedOptions = opList.toArray(new String[0]);
+			}
+			setItems(fixedOptions, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					if (OPTION_RETWEET==which) {
@@ -313,6 +329,16 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						intent.putExtra(Intent.EXTRA_TEXT, "@"+item.getUsername()+" ");
 						intent.putExtra(MyTwitterApp.INTENT_EXTRA_SELECTION, MyTwitterApp.INTENT_EXTRA_SELECTION_END);
 						parentActivity.startActivity(intent);
+					} else if (OPTION_JUMP == which) {
+						List<String> urls = ItemDialog.this.urls;
+						if (urls.size() > 0) {
+							try {
+								Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
+								parentActivity.startActivity(i);
+							} catch (Exception e) {
+								Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
+							}
+						}
 					}
 				}
 			});
