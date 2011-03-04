@@ -36,4 +36,6 @@
 
 <string name="urls">URLs</string>
     <string name="jump_to">Jump to %s</string>
+<string name="favorites">Favorites</string>
+<string name="favorites_successful">Favorites Successful</string>
 </resources>

@@ -292,6 +292,22 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		});
 	}
 	
+	void postFavorites(final TimelineItem item) {
+		Runnable successCallback = new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(parentActivity.getApplicationContext(), R.string.favorites_successful, Toast.LENGTH_LONG).show();
+			}
+		};
+		parentActivity.timelineLoader.load(new BaseRequest(successCallback, null) {
+			@Override
+			public void processRequest(ProcessLoader loader) {
+				parentActivity.twitter.postFavorites(item.getStatusId());
+				super.processRequest(loader);
+			}
+		});
+	}
+
 	void deleteTweet(final TimelineItem item) {
 		//FIXME 未実装
 	}
@@ -304,12 +320,14 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		static final int OPTION_RETWEET = 0;
 		static final int OPTION_RETWEET_WITH_COMMENT = 1;
 		static final int OPTION_REPLY = 2;
-		static final int OPTION_URLS = 3;
+		static final int OPTION_FAVORITES = 3;
+		static final int OPTION_URLS = 4;
 
 		final String[] options = {
 			parentActivity.getString(R.string.retweet), 
 			parentActivity.getString(R.string.retweet_with_comment),
 			parentActivity.getString(R.string.reply),
+			parentActivity.getString(R.string.favorites),
 		};
 
 		public ItemDialog(Activity activity) {
@@ -347,6 +365,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						intent.putExtra(Intent.EXTRA_TEXT, "@"+item.getUsername()+" ");
 						intent.putExtra(MyTwitterApp.INTENT_EXTRA_SELECTION, MyTwitterApp.INTENT_EXTRA_SELECTION_END);
 						parentActivity.startActivity(intent);
+					} else if (OPTION_FAVORITES == which) {
+						postFavorites(item);
 					} else if (OPTION_URLS == which) {
 						List<String> urls = ItemDialog.this.urls;
 						if (urls.size() == 1) {

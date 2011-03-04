@@ -54,6 +54,8 @@ public final class R {
         public static final int delete=0x7f06001a;
         public static final int delete_successful=0x7f060011;
         public static final int direct_message=0x7f06001b;
+        public static final int favorites=0x7f060023;
+        public static final int favorites_successful=0x7f060024;
         public static final int font_size=0x7f060016;
         public static final int hello=0x7f060000;
         public static final int jump_to=0x7f060022;
