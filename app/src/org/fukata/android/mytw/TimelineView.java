@@ -233,8 +233,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	}
 
 	void processFocusItem(LoadMode mode, int firstItemPosition, int firstItemTop) {
-		// 表示されているツイートが最上部以外の場合
-		if (mode == LoadMode.NEW && firstItemPosition > 0) {
+		if (mode == LoadMode.NEW) {
 			//新しい選択位置を設定する。
 			setSelectionFromTop(firstItemPosition+lastLoadCount, firstItemTop);
 		}
