@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
@@ -371,12 +372,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						List<String> urls = ItemDialog.this.urls;
 						if (urls.size() == 1) {
 							//URLが一つだけなら、そのまま外部ブラウザで開く
-							try {
-								Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
-								parentActivity.startActivity(intent);
-							} catch (Exception e) {
-								Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
-							}
+							openWithExternalWebBrowser(ItemDialog.this.urls.get(0));
 						} else if (urls.size() > 1) {
 							//URLが複数存在するなら、更に選択肢を表示する。
 							String[] urlMenus = new String[urls.size()];
@@ -386,16 +382,23 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 							setItems(urlMenus, new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									try {
-										Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(which)));
-										parentActivity.startActivity(intent);
-									} catch (Exception e) {
-										Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
-									}
+									openWithExternalWebBrowser(ItemDialog.this.urls.get(which));
 								}
 							});
 							create().show();
 						}
+					}
+				}
+
+				/**
+				 * 外部ブラウザでURLを開く。
+				 */
+				private void openWithExternalWebBrowser(String url) {
+					try {
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
+						parentActivity.startActivity(intent);
+					} catch (Exception e) {
+						Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
 					}
 				}
 			});
