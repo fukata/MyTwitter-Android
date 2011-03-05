@@ -2,9 +2,11 @@ package org.fukata.android.mytw.twitter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -229,72 +231,45 @@ public class Twitter {
 		return list;
 	}
 
-	public boolean updateStatus(String status) {
+	private boolean updateBase(String apiPath, HashMap<String, String> map) {
 		HttpParams params = new BasicHttpParams();
 		DefaultHttpClient client = new DefaultHttpClient(params);
-		HttpPost method = new HttpPost(getApiPrefix()+"/statuses/update/");
-		String xml = null;
+		HttpPost method = new HttpPost(getApiPrefix() + apiPath);
 		try {
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-			parameters.add(new BasicNameValuePair("status", status));
+			for (String key : map.keySet()) {
+				parameters.add(new BasicNameValuePair(key, map.get(key)));				
+			}
 			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters, CHARSET);
 			method.setEntity(entity);
 			HttpResponse response = client.execute(method);
+			return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 		} catch (Exception e) {
 			return false;
 		}
-		return true;
+	}
+
+	public boolean updateStatus(String status) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("status", status);
+		return updateBase("/statuses/update/", map);
 	}
 	
 	public boolean postReTweet(String statusId) {
-		HttpParams params = new BasicHttpParams();
-		DefaultHttpClient client = new DefaultHttpClient(params);
-		HttpPost method = new HttpPost(getApiPrefix()+"/statuses/retweet/");
-		String xml = null;
-		try {
-			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-			parameters.add(new BasicNameValuePair("id", statusId));
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters, CHARSET);
-			method.setEntity(entity);
-			HttpResponse response = client.execute(method);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", statusId);
+		return updateBase("/statuses/retweet/", map);
 	}
 	
 	public boolean deleteDirectMessage(String statusId) {
-		HttpParams params = new BasicHttpParams();
-		DefaultHttpClient client = new DefaultHttpClient(params);
-		HttpPost method = new HttpPost(getApiPrefix()+"/direct_messages/destroy/");
-		String xml = null;
-		try {
-			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-			parameters.add(new BasicNameValuePair("id", statusId));
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters, CHARSET);
-			method.setEntity(entity);
-			HttpResponse response = client.execute(method);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", statusId);
+		return updateBase("/direct_messages/destroy/", map);
 	}
 
 	public boolean postFavorites(String statusId) {
-		HttpParams params = new BasicHttpParams();
-		DefaultHttpClient client = new DefaultHttpClient(params);
-		HttpPost method = new HttpPost(getApiPrefix()+"/favorites/create/");
-		String xml = null;
-		try {
-			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
-			parameters.add(new BasicNameValuePair("id", statusId));
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(parameters, CHARSET);
-			method.setEntity(entity);
-			HttpResponse response = client.execute(method);
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", statusId);
+		return updateBase("/favorites/create/", map);
 	}
 }
