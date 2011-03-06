@@ -32,7 +32,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class TimelineView extends ListView implements View.OnClickListener, OnItemLongClickListener {
-	// 定期的に最新のツイートを取得する間隔
+	// 定期的に最新のツイートを取得するかどうかチェックする間隔
 	static final int UPDATE_TIMELINE_CHECK_INVERVAL = 10000;
 
 	private static final int NOTIFY_NEW_TWEET = 1;
@@ -370,7 +370,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						List<String> urls = ItemDialog.this.urls;
 						if (urls.size() == 1) {
 							//URLが一つだけなら、そのまま外部ブラウザで開く
-							openWithExternalWebBrowser(ItemDialog.this.urls.get(0));
+							openOnExternalWebBrowser(ItemDialog.this.urls.get(0));
 						} else if (urls.size() > 1) {
 							//URLが複数存在するなら、更に選択肢を表示する。
 							String[] urlMenus = new String[urls.size()];
@@ -380,7 +380,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 							setItems(urlMenus, new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									openWithExternalWebBrowser(ItemDialog.this.urls.get(which));
+									openOnExternalWebBrowser(ItemDialog.this.urls.get(which));
 								}
 							});
 							create().show();
@@ -391,7 +391,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				/**
 				 * 外部ブラウザでURLを開く。
 				 */
-				private void openWithExternalWebBrowser(String url) {
+				private void openOnExternalWebBrowser(String url) {
 					try {
 						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
 						parentActivity.startActivity(intent);
