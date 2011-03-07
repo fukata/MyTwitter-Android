@@ -393,7 +393,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				 */
 				private void openOnExternalWebBrowser(String url) {
 					try {
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(ItemDialog.this.urls.get(0)));
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 						parentActivity.startActivity(intent);
 					} catch (Exception e) {
 						Toast.makeText(parentActivity.getApplicationContext(), R.string.update_unsuccessful, Toast.LENGTH_LONG).show();
