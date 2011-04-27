@@ -87,6 +87,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		if (v==backgroundProcess) {
 			updateFields();
 		} else if (v==updateUser) {
+			updateFields();
 			updateUser();
 		}
 	}

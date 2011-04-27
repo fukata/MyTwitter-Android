@@ -20,9 +20,9 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int account_id=0x7f080005;
-        public static final int account_name=0x7f080004;
-        public static final int api_server_url=0x7f080007;
+        public static final int account_id=0x7f080006;
+        public static final int account_name=0x7f080005;
+        public static final int api_server_url=0x7f080004;
         public static final int auto_interval=0x7f080009;
         public static final int background_process=0x7f08000a;
         public static final int font_size=0x7f080008;
@@ -36,7 +36,7 @@ public final class R {
         public static final int timeline_status=0x7f080003;
         public static final int timeline_username=0x7f080001;
         public static final int update_status=0x7f08000f;
-        public static final int update_user=0x7f080006;
+        public static final int update_user=0x7f080007;
     }
     public static final class layout {
         public static final int direct_message_timeline_item=0x7f030000;
