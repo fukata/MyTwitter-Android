@@ -3,6 +3,7 @@
     <string name="hello">Hello World, MyTwitterActivity!</string>
     <string name="app_name">MyTwitter</string>
     <string name="nodata">No data</string>
+    <string name="update_user">Update User</string>
     <string name="update_status">Update Status</string>
     <string name="update_status_with_count">Update Status (%1$d/%2$d)</string>
     <string name="updating">Updating...</string>
@@ -21,6 +22,7 @@
     <string name="reply">Reply</string>
     <string name="settings">Settings</string>
     <string name="account">Account:</string>
+    <string name="account_id">AccountID:</string>
     <string name="api_server">API Server:</string>
     <string name="font_size">Font Size:</string>
     <string name="auto_interval">Auto Interval:</string>

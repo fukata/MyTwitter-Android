@@ -1,14 +1,18 @@
 package org.fukata.android.mytw;
 
+import org.fukata.android.mytw.twitter.Twitter;
+import org.fukata.android.mytw.twitter.rs.User;
 import org.fukata.android.mytw.util.SettingUtil;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class SettingsActivity extends Activity implements OnClickListener {
 	EditText apiServerUrl;
@@ -16,13 +20,22 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	Spinner autoIntervals;
 	CheckBox backgroundProcess;
 	CheckBox notification;
+	TextView accountName;
+	TextView accountId;
+	Button updateUser;
+
+	Twitter twitter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.settings);
 		SettingUtil.init(this);
+		twitter = new Twitter();
 		
+		accountName = (TextView) findViewById(R.id.account_name);
+		accountId = (TextView) findViewById(R.id.account_id);
+		updateUser = (Button) findViewById(R.id.update_user);
 		apiServerUrl = (EditText) findViewById(R.id.api_server_url);
 		fontSizes = (Spinner) findViewById(R.id.font_size);
 		autoIntervals = (Spinner) findViewById(R.id.auto_interval);
@@ -30,11 +43,14 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		notification = (CheckBox) findViewById(R.id.notification);
 
 		backgroundProcess.setOnClickListener(this);
+		updateUser.setOnClickListener(this);
 		
 		initFields();
 	}
 	
 	private void initFields() {
+		accountName.setText(SettingUtil.getAccountName());
+		accountId.setText(SettingUtil.getAccountId());
 		apiServerUrl.setText(SettingUtil.getApiServerUrl());
 		fontSizes.setSelection(SettingUtil.getFontSizeIndex());
 		autoIntervals.setSelection(SettingUtil.getAutoIntervalIndex());
@@ -70,6 +86,20 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		if (v==backgroundProcess) {
 			updateFields();
+		} else if (v==updateUser) {
+			updateUser();
 		}
+	}
+
+	private void updateUser() {
+		User user = twitter.getUser();
+		if (user == null) {
+			return;
+		}
+		
+		accountName.setText(user.getScreenname());
+		accountId.setText(user.getId());
+		SettingUtil.setAccountName(user.getScreenname());
+		SettingUtil.setAccountName(user.getId());
 	}
 }

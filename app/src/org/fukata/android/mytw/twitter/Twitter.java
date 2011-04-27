@@ -272,4 +272,27 @@ public class Twitter {
 		map.put("id", statusId);
 		return updateBase("/favorites/create/", map);
 	}
+	
+	// ===============================================================
+	// users
+	// ===============================================================
+	public User getUser() {
+		HttpParams params = new BasicHttpParams();
+		DefaultHttpClient client = new DefaultHttpClient(params);
+		StringBuilder url = new StringBuilder(getApiPrefix()+"/users/show/");
+		HttpGet method = new HttpGet(url.toString());
+		String xml = null;
+		
+		User user = null;
+		try {
+			HttpResponse response = client.execute(method);
+			xml = EntityUtils.toString(response.getEntity(), CHARSET);
+			xStream.alias("xml", User.class);
+			user = (User) xStream.fromXML(xml);
+		} catch (Exception e) {
+		}
+		
+		return user;
+	}
+
 }

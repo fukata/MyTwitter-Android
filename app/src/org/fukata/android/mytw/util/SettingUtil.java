@@ -13,6 +13,8 @@ public enum SettingUtil {
 	;
 	private static final Pattern URL_PATTERN = Pattern.compile("(https?://)[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+");
 	
+	private static final String KEY_ACCOUNT_ID = "account_id";
+	private static final String KEY_ACCOUNT_NAME = "account_name";
 	private static final String KEY_API_SERVER_URL = "api_server_url";
 	private static final String KEY_FONT_SIZE = "font_size";
 	private static final String KEY_AUTO_INTERVAL = "auto_interval";
@@ -64,6 +66,18 @@ public enum SettingUtil {
 		return edit.commit();
 	}
 	
+	public static boolean setAccountName(String accountName) {
+		Editor edit = preferences.edit();
+		edit.putString(KEY_ACCOUNT_NAME, accountName);
+		return edit.commit();
+	}
+	
+	public static boolean setAccountId(String accountId) {
+		Editor edit = preferences.edit();
+		edit.putString(KEY_ACCOUNT_ID, accountId);
+		return edit.commit();
+	}
+	
 	public static String getApiServerUrl() {
 		return preferences.getString(KEY_API_SERVER_URL, null);
 	}
@@ -106,6 +120,14 @@ public enum SettingUtil {
 	
 	public static boolean isNotificationEnabled() {
 		return preferences.getBoolean(KEY_NOTIFICATION, false);
+	}
+	
+	public static String getAccountName() {
+		return preferences.getString(KEY_ACCOUNT_NAME, "");
+	}
+	
+	public static String getAccountId() {
+		return preferences.getString(KEY_ACCOUNT_ID, "");
 	}
 }
 
