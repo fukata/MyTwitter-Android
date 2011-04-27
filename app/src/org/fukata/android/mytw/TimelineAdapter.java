@@ -22,7 +22,7 @@ import android.widget.TextView;
 public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 	LayoutInflater inflater; 
 	List<TimelineItem> items;
-	static final Pattern USERNAME_PATTERN = Pattern.compile("(@[a-zA-Z0-9]+)");
+	static final Pattern USERNAME_PATTERN = Pattern.compile("(@[a-zA-Z0-9_]+)");
 	static final Pattern URL_PATTERN = Pattern.compile("(https?://)[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+\\@\\,\\_\\!\\*\\(\\)]+");
 	static final Pattern HASHTAG_PATTERN = Pattern.compile("(#[\\w]+)");
 	
