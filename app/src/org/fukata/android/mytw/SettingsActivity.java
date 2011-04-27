@@ -100,6 +100,6 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		accountName.setText(user.getScreenname());
 		accountId.setText(user.getId());
 		SettingUtil.setAccountName(user.getScreenname());
-		SettingUtil.setAccountName(user.getId());
+		SettingUtil.setAccountId(user.getId());
 	}
 }

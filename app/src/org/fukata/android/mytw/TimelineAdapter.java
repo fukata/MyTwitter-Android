@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.util.PrettyDateUtil;
 import org.fukata.android.mytw.util.SettingUtil;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +39,10 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 			view = inflater.inflate(R.layout.timeline_item, null);
 		}
 		
+		
 		TimelineItem item = getItem(position);
+		decorateView(view, item);
+		
 		// username
 		TextView username = (TextView) view.findViewById(R.id.timeline_username);
 		username.setText(item.getUsername());
@@ -63,6 +68,30 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 		((TextView) view.findViewById(R.id.timeline_source)).setTextSize(size);
 		((TextView) view.findViewById(R.id.timeline_created_at)).setTextSize(size);
 		((TextView) view.findViewById(R.id.timeline_status)).setTextSize(size);
+	}
+	
+	void decorateView(View view, TimelineItem item) {
+		if (isMention(item, SettingUtil.getAccountName())) {
+			view.setBackgroundColor(Color.DKGRAY);
+			//orange
+//			view.setBackgroundColor(Color.rgb(253, 126, 0));
+		} else {
+			view.setBackgroundColor(Color.BLACK);
+		}
+	}
+
+	boolean isMention(TimelineItem item, String accountName) {
+		String status = item.getStatus();
+		Matcher usernameMatcher = USERNAME_PATTERN.matcher(status);
+		usernameMatcher.reset();
+		while (usernameMatcher.find()) {
+			String username = usernameMatcher.group();
+			if (StringUtil.equals(username, "@"+accountName)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	CharSequence decorateStatus(String status) {
