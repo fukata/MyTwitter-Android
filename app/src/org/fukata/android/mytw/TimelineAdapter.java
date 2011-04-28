@@ -75,8 +75,6 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 			view.setBackgroundColor(Color.DKGRAY);
 			//orange
 //			view.setBackgroundColor(Color.rgb(253, 126, 0));
-		} else {
-			view.setBackgroundColor(Color.BLACK);
 		}
 	}
 
