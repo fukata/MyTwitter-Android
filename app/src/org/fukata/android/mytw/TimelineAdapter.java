@@ -73,8 +73,8 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 	void decorateView(View view, TimelineItem item) {
 		if (isMention(item, SettingUtil.getAccountName())) {
 			view.setBackgroundColor(Color.DKGRAY);
-			//orange
-//			view.setBackgroundColor(Color.rgb(253, 126, 0));
+		} else {
+			view.setBackgroundColor(Color.TRANSPARENT);
 		}
 	}
 
