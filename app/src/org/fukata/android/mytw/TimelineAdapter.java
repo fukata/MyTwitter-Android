@@ -84,7 +84,7 @@ public class TimelineAdapter extends ArrayAdapter<TimelineItem> {
 		usernameMatcher.reset();
 		while (usernameMatcher.find()) {
 			String username = usernameMatcher.group();
-			if (StringUtil.equals(username, "@"+accountName)) {
+			if (StringUtil.equalsIgnoreCase(username, "@"+accountName)) {
 				return true;
 			}
 		}
