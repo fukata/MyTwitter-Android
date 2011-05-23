@@ -18,6 +18,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 	EditText apiServerUrl;
 	Spinner fontSizes;
 	Spinner autoIntervals;
+	Spinner timelineCounts;
 	CheckBox backgroundProcess;
 	CheckBox notification;
 	TextView accountName;
@@ -39,6 +40,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		apiServerUrl = (EditText) findViewById(R.id.api_server_url);
 		fontSizes = (Spinner) findViewById(R.id.font_size);
 		autoIntervals = (Spinner) findViewById(R.id.auto_interval);
+		timelineCounts = (Spinner) findViewById(R.id.timeline_count);
 		backgroundProcess = (CheckBox) findViewById(R.id.background_process);
 		notification = (CheckBox) findViewById(R.id.notification);
 
@@ -54,6 +56,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		apiServerUrl.setText(SettingUtil.getApiServerUrl());
 		fontSizes.setSelection(SettingUtil.getFontSizeIndex());
 		autoIntervals.setSelection(SettingUtil.getAutoIntervalIndex());
+		timelineCounts.setSelection(SettingUtil.getTimelineCountIndex());
 		backgroundProcess.setChecked(SettingUtil.isBackgroundProcessEnabled());
 		notification.setChecked(SettingUtil.isNotificationEnabled());
 		
@@ -76,6 +79,9 @@ public class SettingsActivity extends Activity implements OnClickListener {
 		// auto interval
 		int interval = autoIntervals.getSelectedItemPosition();
 		SettingUtil.setAutoInterval(interval);
+		// timeline count
+		int timelineCount = timelineCounts.getSelectedItemPosition();
+		SettingUtil.setTimelineCount(timelineCount);
 		// background process
 		SettingUtil.setBackgroundProcess(backgroundProcess.isChecked());
 		// notification

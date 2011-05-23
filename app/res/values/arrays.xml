@@ -28,4 +28,14 @@
     	<item>900</item>
     	<item>1800</item>
     </integer-array>
+    <string-array name="timeline_count_labels">
+    	<item>20件</item>
+    	<item>50件</item>
+    	<item>100件</item>
+    </string-array>
+    <integer-array name="timeline_count_values">
+    	<item>20</item>
+    	<item>50</item>
+    	<item>100</item>
+    </integer-array>
 </resources>

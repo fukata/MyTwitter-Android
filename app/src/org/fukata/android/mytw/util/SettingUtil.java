@@ -20,6 +20,7 @@ public enum SettingUtil {
 	private static final String KEY_AUTO_INTERVAL = "auto_interval";
 	private static final String KEY_BACKGROUND_PROCESS = "background_process";
 	private static final String KEY_NOTIFICATION = "notification";
+	private static final String KEY_TIMELINE_COUNT = "timeline_count";
 	
 	private static final String NAME = "mytw";
 	private static SharedPreferences preferences;
@@ -78,6 +79,12 @@ public enum SettingUtil {
 		return edit.commit();
 	}
 	
+	public static boolean setTimelineCount(int timelineCount) {
+		Editor edit = preferences.edit();
+		edit.putInt(KEY_TIMELINE_COUNT, timelineCount);
+		return edit.commit();
+	}
+	
 	public static String getApiServerUrl() {
 		return preferences.getString(KEY_API_SERVER_URL, null);
 	}
@@ -128,6 +135,20 @@ public enum SettingUtil {
 	
 	public static String getAccountId() {
 		return preferences.getString(KEY_ACCOUNT_ID, "");
+	}
+	
+	public static int getTimelineCountIndex() {
+		return preferences.getInt(KEY_TIMELINE_COUNT, 0);
+	}
+	
+	public static int getTimelineCount() {
+		int i = getTimelineCountIndex();
+		int[] counts = context.getResources().getIntArray(R.array.timeline_count_values);
+		if (counts.length>i) {
+			return counts[i];
+		} else {
+			return counts[0];
+		}
 	}
 }
 
