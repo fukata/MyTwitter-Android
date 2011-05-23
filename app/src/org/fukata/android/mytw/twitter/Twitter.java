@@ -47,7 +47,8 @@ public class Twitter {
 	// ===============================================================
 	
 	public List<TimelineItem> getHomeTimeline() {
-		return loadHomeTimeline(null);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		return loadHomeTimeline(params);
 	}
 	
 	public List<TimelineItem> getMoreHomeTimeline(String maxId) {
@@ -63,6 +64,8 @@ public class Twitter {
 	}
 	
 	private List<TimelineItem> loadHomeTimeline(List<NameValuePair> parameters) {
+		parameters.add(new BasicNameValuePair("count", String.valueOf(SettingUtil.getTimelineCount())));
+		
 		HttpParams params = new BasicHttpParams();
 		List<TimelineItem> list = new ArrayList<TimelineItem>();
 		DefaultHttpClient client = new DefaultHttpClient(params);
@@ -110,7 +113,8 @@ public class Twitter {
 	// ===============================================================
 
 	public List<TimelineItem> getMentions() {
-		return loadMentions(null);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		return loadMentions(params);
 	}
 	
 	public List<TimelineItem> getMoreMentions(String maxId) {
@@ -126,6 +130,8 @@ public class Twitter {
 	}
 	
 	private List<TimelineItem> loadMentions(List<NameValuePair> parameters) {
+		parameters.add(new BasicNameValuePair("count", String.valueOf(SettingUtil.getTimelineCount())));
+		
 		HttpParams params = new BasicHttpParams();
 		List<TimelineItem> list = new ArrayList<TimelineItem>();
 		DefaultHttpClient client = new DefaultHttpClient(params);
@@ -173,7 +179,8 @@ public class Twitter {
 	// ===============================================================
 	
 	public List<TimelineItem> getDirectMessages() {
-		return loadDirectMessages(null);
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		return loadDirectMessages(params);
 	}
 	
 	public List<TimelineItem> getMoreDirectMessages(String maxId) {
@@ -189,6 +196,7 @@ public class Twitter {
 	}
 	
 	private List<TimelineItem> loadDirectMessages(List<NameValuePair> parameters) {
+		parameters.add(new BasicNameValuePair("count", String.valueOf(SettingUtil.getTimelineCount())));
 		HttpParams params = new BasicHttpParams();
 		List<TimelineItem> list = new ArrayList<TimelineItem>();
 		DefaultHttpClient client = new DefaultHttpClient(params);

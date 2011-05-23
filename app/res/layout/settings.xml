@@ -21,6 +21,10 @@
 		<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/font_size" android:entries="@array/font_size_labels"/>
 	</LinearLayout>
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/timeline_count" />
+		<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/timeline_count" android:entries="@array/timeline_count_labels"/>
+	</LinearLayout>
+	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/auto_interval" />
 		<Spinner android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1" android:id="@+id/auto_interval" android:entries="@array/auto_interval_labels"/>
 	</LinearLayout>

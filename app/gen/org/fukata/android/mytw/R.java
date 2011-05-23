@@ -13,6 +13,8 @@ public final class R {
         public static final int auto_interval_values=0x7f050003;
         public static final int font_size_labels=0x7f050000;
         public static final int font_size_values=0x7f050001;
+        public static final int timeline_count_labels=0x7f050004;
+        public static final int timeline_count_values=0x7f050005;
     }
     public static final class attr {
     }
@@ -23,19 +25,20 @@ public final class R {
         public static final int account_id=0x7f080006;
         public static final int account_name=0x7f080005;
         public static final int api_server_url=0x7f080004;
-        public static final int auto_interval=0x7f080009;
-        public static final int background_process=0x7f08000a;
+        public static final int auto_interval=0x7f08000a;
+        public static final int background_process=0x7f08000b;
         public static final int font_size=0x7f080008;
-        public static final int more=0x7f08000c;
-        public static final int notification=0x7f08000b;
-        public static final int status=0x7f080010;
+        public static final int more=0x7f08000d;
+        public static final int notification=0x7f08000c;
+        public static final int status=0x7f080011;
+        public static final int timeline_count=0x7f080009;
         public static final int timeline_created_at=0x7f080002;
-        public static final int timeline_from=0x7f08000d;
+        public static final int timeline_from=0x7f08000e;
         public static final int timeline_item=0x7f080000;
-        public static final int timeline_source=0x7f08000e;
+        public static final int timeline_source=0x7f08000f;
         public static final int timeline_status=0x7f080003;
         public static final int timeline_username=0x7f080001;
-        public static final int update_status=0x7f08000f;
+        public static final int update_status=0x7f080010;
         public static final int update_user=0x7f080007;
     }
     public static final class layout {
@@ -53,22 +56,22 @@ public final class R {
         public static final int api_server=0x7f060017;
         public static final int app_name=0x7f060001;
         public static final int auto_interval=0x7f060019;
-        public static final int background_process=0x7f060021;
-        public static final int delete=0x7f06001c;
+        public static final int background_process=0x7f060022;
+        public static final int delete=0x7f06001d;
         public static final int delete_successful=0x7f060012;
-        public static final int direct_message=0x7f06001d;
-        public static final int favorites=0x7f060025;
-        public static final int favorites_successful=0x7f060026;
+        public static final int direct_message=0x7f06001e;
+        public static final int favorites=0x7f060026;
+        public static final int favorites_successful=0x7f060027;
         public static final int font_size=0x7f060018;
         public static final int hello=0x7f060000;
-        public static final int jump_to=0x7f060024;
+        public static final int jump_to=0x7f060025;
         public static final int more=0x7f060009;
         public static final int new_timeline=0x7f06000b;
         public static final int nodata=0x7f060002;
-        public static final int notification=0x7f060022;
-        public static final int notify_new_direct_message=0x7f060020;
-        public static final int notify_new_mention=0x7f06001f;
-        public static final int notify_new_tweet=0x7f06001e;
+        public static final int notification=0x7f060023;
+        public static final int notify_new_direct_message=0x7f060021;
+        public static final int notify_new_mention=0x7f060020;
+        public static final int notify_new_tweet=0x7f06001f;
         public static final int options=0x7f06000e;
         public static final int refresh_timeline=0x7f06000c;
         public static final int reply=0x7f060013;
@@ -76,17 +79,18 @@ public final class R {
         public static final int retweet=0x7f06000f;
         public static final int retweet_successful=0x7f060011;
         public static final int retweet_with_comment=0x7f060010;
-        public static final int search_hint=0x7f06001b;
-        public static final int search_label=0x7f06001a;
+        public static final int search_hint=0x7f06001c;
+        public static final int search_label=0x7f06001b;
         public static final int settings=0x7f060014;
         public static final int status_count=0x7f06000d;
+        public static final int timeline_count=0x7f06001a;
         public static final int update_status=0x7f060004;
         public static final int update_status_with_count=0x7f060005;
         public static final int update_successful=0x7f060007;
         public static final int update_unsuccessful=0x7f060008;
         public static final int update_user=0x7f060003;
         public static final int updating=0x7f060006;
-        public static final int urls=0x7f060023;
+        public static final int urls=0x7f060024;
     }
     public static final class style {
         public static final int created_at=0x7f070002;
