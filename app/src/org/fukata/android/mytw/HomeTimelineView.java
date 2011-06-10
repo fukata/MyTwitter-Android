@@ -2,6 +2,8 @@ package org.fukata.android.mytw;
 
 import java.util.List;
 
+import org.fukata.android.mytw.database.schema.TweetSchema.TweetType;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -29,8 +31,8 @@ public class HomeTimelineView extends TimelineView {
 		return parentActivity.twitter.getHomeTimeline();
 	}
 
-//	@Override
-//	CharSequence getTitle() {
-//		return parentActivity.getString(R.string.title_home);
-//	}
+	@Override
+	TweetType getTweetType() {
+		return TweetType.HOME;
+	}
 }

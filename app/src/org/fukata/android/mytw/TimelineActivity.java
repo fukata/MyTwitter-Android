@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fukata.android.exandroid.loader.process.ProcessLoader;
+import org.fukata.android.mytw.database.dao.TweetDao;
 import org.fukata.android.mytw.twitter.Twitter;
 import org.fukata.android.mytw.util.SettingUtil;
 
@@ -34,6 +35,7 @@ public class TimelineActivity extends TabActivity implements TabHost.TabContentF
 	
 	ProcessLoader timelineLoader;
 	Twitter twitter;
+	TweetDao tweetDao;
 	
 	Map<String, TimelineView> timelineMap;
 	
@@ -43,6 +45,7 @@ public class TimelineActivity extends TabActivity implements TabHost.TabContentF
 		SettingUtil.init(this);
 		timelineLoader = new ProcessLoader(this);
 		twitter = new Twitter();
+		tweetDao = new TweetDao(getApplicationContext());
 		
 		// init timeline
 		timelineMap = new HashMap<String, TimelineView>();

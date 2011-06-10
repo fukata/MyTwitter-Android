@@ -9,6 +9,8 @@ import org.fukata.android.exandroid.loader.process.BaseRequest;
 import org.fukata.android.exandroid.loader.process.ProcessLoader;
 import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.TimelineActivity.LoadMode;
+import org.fukata.android.mytw.database.dto.TweetDto;
+import org.fukata.android.mytw.database.schema.TweetSchema.TweetType;
 import org.fukata.android.mytw.util.SettingUtil;
 import org.fukata.android.mytw.util.StringMatchUtils;
 import org.fukata.android.mytw.util.StringUtils;
@@ -69,7 +71,44 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
         setOnItemLongClickListener(this);
         setAdapter(adapter);
 
+        initTimeline();
         attachUpdateInterval();
+	}
+	
+	void initTimeline() {
+		adapter.clear();
+		List<TweetDto> tweets = parentActivity.tweetDao.findByType(getTweetType());
+		for (TweetDto tweet : tweets) {
+			TimelineItem item = generateTimelineItem(tweet);
+			adapter.add(item);
+		}
+	}
+
+	TimelineItem generateTimelineItem(TweetDto tweet) {
+		TimelineItem item = new TimelineItem();
+		
+		item.setStatusId(tweet.statusId);
+		item.setStatus(tweet.status);
+		item.setUsername(tweet.username);
+		item.setUserId(tweet.userId);
+		item.setSource(tweet.source);
+		item.setCreatedAt(tweet.createdAt);
+		
+		return item;
+	}
+
+	TweetDto generateTweetDto(TimelineItem item) {
+		TweetDto dto = new TweetDto();
+		
+		dto.statusId = item.getStatusId();
+		dto.status = item.getStatus();
+		dto.username = item.getUsername();
+		dto.userId = item.getUserId();
+		dto.source = item.getSource();
+		dto.createdAt = item.getCreatedAt();
+		dto.tweetType = getTweetType();
+		
+		return dto;
 	}
 	
 	ItemDialog newInstanceItemDialog() {
@@ -96,6 +135,10 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 
 	TimelineAdapter newInstanceTimelineAdapter(Context context, List<TimelineItem> items) {
 		return new TimelineAdapter(context, items);
+	}
+	
+	TweetType getTweetType() {
+		return TweetType.HOME;
 	}
 	
 	void loadTimeline(final LoadMode mode) {
@@ -131,12 +174,25 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				} else if (LoadMode.MORE==mode) {
 					list = getMoreTimeline(lastStatuseId);
 				}
-				if (list!=null) {
+				if (list != null) {
 					for (TimelineItem item : list) {
 						timeline.add(item);
 					}
+					
+					updateCache(timeline);
 				}
 				super.processRequest(loader);
+			}
+
+			void updateCache(final List<TimelineItem> timeline) {
+				List<TweetDto> tweets = new ArrayList<TweetDto>();
+				int count = SettingUtil.getTimelineCount();
+				int len = timeline.size() > count ? count : timeline.size();
+				for (int i=0; i<len; i++) {
+					TimelineItem item = timeline.get(i);
+					tweets.add( generateTweetDto(item) );
+				}
+				parentActivity.tweetDao.updateTweets(tweets, getTweetType());
 			}
 
 		});

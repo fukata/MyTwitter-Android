@@ -2,6 +2,8 @@ package org.fukata.android.mytw;
 
 import java.util.List;
 
+import org.fukata.android.mytw.database.schema.TweetSchema.TweetType;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -28,8 +30,8 @@ public class MentionTimelineView extends TimelineView {
 		return parentActivity.twitter.getMentions();
 	}
 
-//	@Override
-//	CharSequence getTitle() {
-//		return parentActivity.getString(R.string.title_mentions);
-//	}
+	@Override
+	TweetType getTweetType() {
+		return TweetType.MENTION;
+	}
 }

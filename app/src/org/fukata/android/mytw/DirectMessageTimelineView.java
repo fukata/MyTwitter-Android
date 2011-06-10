@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.fukata.android.exandroid.loader.process.BaseRequest;
 import org.fukata.android.exandroid.loader.process.ProcessLoader;
+import org.fukata.android.mytw.database.schema.TweetSchema.TweetType;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,10 +42,10 @@ public class DirectMessageTimelineView extends TimelineView {
 		return parentActivity.twitter.getDirectMessages();
 	}
 
-//	@Override
-//	CharSequence getTitle() {
-//		return parentActivity.getString(R.string.title_dm);
-//	}
+	@Override
+	TweetType getTweetType() {
+		return TweetType.DM;
+	}
 	
 	@Override
 	void deleteTweet(final TimelineItem item) {
