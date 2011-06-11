@@ -169,16 +169,19 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				if (LoadMode.REFRESH==mode) {
 					list = getTimeline();
 					timeline.addAll(list);
-					refreshCache(timeline);
+					// 1件でも取得できている場合のみリフレッシュ
+					if (list.size() > 0) {
+						refreshCache(timeline);
+					}
 				} else if (LoadMode.NEW==mode) {
 					list = getNewTimeline(latestStatuseId);
 					lastLoadCount = list.size();
 					timeline.addAll(list);
-					addCache(timeline);
+					addCache(list);
 				} else if (LoadMode.MORE==mode) {
 					list = getMoreTimeline(lastStatuseId);
 					timeline.addAll(list);
-					addCache(timeline);
+					addCache(list);
 				}
 				super.processRequest(loader);
 			}
