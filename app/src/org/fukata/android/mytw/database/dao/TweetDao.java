@@ -19,10 +19,10 @@ public class TweetDao extends BaseDao {
 		super(context);
 	}
 
-	public List<TweetDto> findByType(TweetSchema.TweetType tweetType) {
+	public List<TweetDto> findByType(TweetSchema.TweetType tweetType, int limit) {
 		SQLiteDatabase db = con.getReadableDatabase();
-		String sql = "SELECT * FROM " + TweetSchema.TABLE + " WHERE tweet_type = ? ORDER BY created_at DESC";
-		String[] selectionArgs = new String[]{ String.valueOf(tweetType.getType()) };
+		String sql = "SELECT * FROM " + TweetSchema.TABLE + " WHERE tweet_type = ? ORDER BY created_at DESC LIMIT ?";
+		String[] selectionArgs = new String[]{ String.valueOf(tweetType.getType()), String.valueOf(limit) };
 		Cursor cursor = db.rawQuery(sql, selectionArgs);
 		
 		List<TweetDto> list = new ArrayList<TweetDto>();
@@ -35,7 +35,32 @@ public class TweetDao extends BaseDao {
 		return list;
 	}
 	
-	public void updateTweets(List<TweetDto> tweets, TweetSchema.TweetType tweetType) {
+	public void addTweets(List<TweetDto> tweets, TweetSchema.TweetType tweetType) {
+		
+		SQLiteDatabase db = con.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			
+			for (TweetDto tweet : tweets) {
+				ContentValues values = new ContentValues();
+				values.put(TweetSchema.STATUS_ID, tweet.statusId);
+				values.put(TweetSchema.STATUS, tweet.status);
+				values.put(TweetSchema.USERNAME, tweet.username);
+				values.put(TweetSchema.USER_ID, tweet.userId);
+				values.put(TweetSchema.SOURCE, tweet.source);
+				values.put(TweetSchema.CREATED_AT, tweet.createdAt.getTime());
+				values.put(TweetSchema.TWEET_TYPE, tweet.tweetType.getType());
+				values.put(TweetSchema.CUSTOM, tweet.custom);
+				db.insertOrThrow(TweetSchema.TABLE, null, values);
+			}
+			
+			db.setTransactionSuccessful();
+		} finally {
+			db.endTransaction();
+		}
+	}
+	
+	public void refreshTweets(List<TweetDto> tweets, TweetSchema.TweetType tweetType) {
 		
 		SQLiteDatabase db = con.getWritableDatabase();
 		try {

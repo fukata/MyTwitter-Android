@@ -77,7 +77,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	
 	void initTimeline() {
 		adapter.clear();
-		List<TweetDto> tweets = parentActivity.tweetDao.findByType(getTweetType());
+		List<TweetDto> tweets = parentActivity.tweetDao.findByType(getTweetType(), SettingUtil.getTimelineCount());
 		for (TweetDto tweet : tweets) {
 			TimelineItem item = generateTimelineItem(tweet);
 			adapter.add(item);
@@ -168,23 +168,22 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				List<TimelineItem> list = null;
 				if (LoadMode.REFRESH==mode) {
 					list = getTimeline();
+					timeline.addAll(list);
+					refreshCache(timeline);
 				} else if (LoadMode.NEW==mode) {
 					list = getNewTimeline(latestStatuseId);
 					lastLoadCount = list.size();
+					timeline.addAll(list);
+					addCache(timeline);
 				} else if (LoadMode.MORE==mode) {
 					list = getMoreTimeline(lastStatuseId);
-				}
-				if (list != null) {
-					for (TimelineItem item : list) {
-						timeline.add(item);
-					}
-					
-					updateCache(timeline);
+					timeline.addAll(list);
+					addCache(timeline);
 				}
 				super.processRequest(loader);
 			}
-
-			void updateCache(final List<TimelineItem> timeline) {
+			
+			void addCache(final List<TimelineItem> newLoadedItems) {
 				List<TweetDto> tweets = new ArrayList<TweetDto>();
 				int count = SettingUtil.getTimelineCount();
 				int len = timeline.size() > count ? count : timeline.size();
@@ -192,7 +191,18 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 					TimelineItem item = timeline.get(i);
 					tweets.add( generateTweetDto(item) );
 				}
-				parentActivity.tweetDao.updateTweets(tweets, getTweetType());
+				parentActivity.tweetDao.addTweets(tweets, getTweetType());
+			}
+
+			void refreshCache(final List<TimelineItem> timeline) {
+				List<TweetDto> tweets = new ArrayList<TweetDto>();
+				int count = SettingUtil.getTimelineCount();
+				int len = timeline.size() > count ? count : timeline.size();
+				for (int i=0; i<len; i++) {
+					TimelineItem item = timeline.get(i);
+					tweets.add( generateTweetDto(item) );
+				}
+				parentActivity.tweetDao.refreshTweets(tweets, getTweetType());
 			}
 
 		});
