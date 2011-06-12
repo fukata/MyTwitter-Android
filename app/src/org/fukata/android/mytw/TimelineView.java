@@ -46,8 +46,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	Button more;
 	
 	int lastLoadCount;
-	String lastStatusId;
-	String latestStatusId;
+	String oldestStatusId;      //取得している一番古いtweetのstatusId
+	String latestStatusId;      //取得している一番新しいtweetのstatusId
 	long lastUpdateTimeline = System.currentTimeMillis();
 	Timer intervalUpdateTimer;
 
@@ -84,9 +84,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		}
 		//キャッシュのtweetsの中での最新のstatusIdを取得する。
 		if (tweets.size() > 0) {
-			TweetDto tweet = tweets.get(0); //最初のレコードが最新
-			this.lastStatusId = tweet.statusId;
-			this.latestStatusId = tweet.statusId;
+			this.oldestStatusId = tweets.get(0).statusId;
+			this.latestStatusId = tweets.get(tweets.size() - 1).statusId;
 		}
 	}
 
@@ -185,7 +184,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 					timeline.addAll(list);
 					addCache(list);
 				} else if (LoadMode.MORE==mode) {
-					list = getMoreTimeline(lastStatusId);
+					list = getMoreTimeline(oldestStatusId);
 					timeline.addAll(list);
 					addCache(list);
 				}
@@ -256,7 +255,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		if (timeline.size()>0) {
 			if (LoadMode.REFRESH==mode) {
 				latestStatusId = timeline.get(0).getStatusId();
-				lastStatusId = timeline.get(timeline.size()-1).getStatusId();
+				oldestStatusId = timeline.get(timeline.size()-1).getStatusId();
 				adapter.clear();
 				for (TimelineItem item : timeline) {
 					adapter.add(item);
@@ -275,11 +274,11 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 				latestStatusId = timeline.get(0).getStatusId();
 			} else if (LoadMode.MORE==mode) {
 				for (TimelineItem item : timeline) {
-					if (!StringUtil.equals(lastStatusId, item.getStatusId())) {
+					if (!StringUtil.equals(oldestStatusId, item.getStatusId())) {
 						adapter.add(item);
 					}
 				}
-				lastStatusId = timeline.get(timeline.size()-1).getStatusId();
+				oldestStatusId = timeline.get(timeline.size()-1).getStatusId();
 				if (hasWindowFocus()) {
 					Toast.makeText(parentActivity.getApplicationContext(), R.string.update_successful, Toast.LENGTH_LONG).show();
 				}
