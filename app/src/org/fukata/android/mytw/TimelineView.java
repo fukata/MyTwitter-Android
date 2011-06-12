@@ -46,8 +46,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	Button more;
 	
 	int lastLoadCount;
-	String lastStatuseId;
-	String latestStatuseId;
+	String lastStatusId;
+	String latestStatusId;
 	long lastUpdateTimeline = System.currentTimeMillis();
 	Timer intervalUpdateTimer;
 
@@ -85,7 +85,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		//キャッシュのtweetsの中での最新のstatusIdを取得する。
 		if (tweets.size() > 0) {
 			TweetDto tweet = tweets.get(0); //最初のレコードが最新
-			this.lastStatuseId = tweet.statusId;
+			this.latestStatusId = tweet.statusId;
 		}
 	}
 
@@ -179,12 +179,12 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						refreshCache(timeline);
 					}
 				} else if (LoadMode.NEW==mode) {
-					list = getNewTimeline(latestStatuseId);
+					list = getNewTimeline(latestStatusId);
 					lastLoadCount = list.size();
 					timeline.addAll(list);
 					addCache(list);
 				} else if (LoadMode.MORE==mode) {
-					list = getMoreTimeline(lastStatuseId);
+					list = getMoreTimeline(lastStatusId);
 					timeline.addAll(list);
 					addCache(list);
 				}
@@ -254,8 +254,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		more.setEnabled(true);
 		if (timeline.size()>0) {
 			if (LoadMode.REFRESH==mode) {
-				latestStatuseId = timeline.get(0).getStatusId();
-				lastStatuseId = timeline.get(timeline.size()-1).getStatusId();
+				latestStatusId = timeline.get(0).getStatusId();
+				lastStatusId = timeline.get(timeline.size()-1).getStatusId();
 				adapter.clear();
 				for (TimelineItem item : timeline) {
 					adapter.add(item);
@@ -266,19 +266,19 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 			} else if (LoadMode.NEW==mode) {
 				int insertAt = 0;
 				for (TimelineItem item : timeline) {
-					if (!StringUtil.equals(latestStatuseId, item.getStatusId())) {
+					if (!StringUtil.equals(latestStatusId, item.getStatusId())) {
 						adapter.insert(item, insertAt);
 						insertAt++;
 					}
 				}
-				latestStatuseId = timeline.get(0).getStatusId();
+				latestStatusId = timeline.get(0).getStatusId();
 			} else if (LoadMode.MORE==mode) {
 				for (TimelineItem item : timeline) {
-					if (!StringUtil.equals(lastStatuseId, item.getStatusId())) {
+					if (!StringUtil.equals(lastStatusId, item.getStatusId())) {
 						adapter.add(item);
 					}
 				}
-				lastStatuseId = timeline.get(timeline.size()-1).getStatusId();
+				lastStatusId = timeline.get(timeline.size()-1).getStatusId();
 				if (hasWindowFocus()) {
 					Toast.makeText(parentActivity.getApplicationContext(), R.string.update_successful, Toast.LENGTH_LONG).show();
 				}
@@ -316,7 +316,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 
 	void doResume() {
 		Log.d(getClass().getSimpleName(), "doResume");
-		boolean noCachedTimeline = this.lastStatuseId == null; //キャッシュが無い場合にtrueとなる
+		boolean noCachedTimeline = this.lastStatusId == null; //キャッシュが無い場合にtrueとなる
 		if (isFirstLoad && noCachedTimeline) {
 			loadTimeline(LoadMode.REFRESH);
 		} else {
