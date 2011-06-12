@@ -54,7 +54,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	boolean isFirstLoad = true;
 	ItemDialog itemDialog;
 	NotificationManager notificationManager;
-
+	
 	public TimelineView(Context context, TimelineActivity activity) {
 		super(context);
 		parentActivity = activity;
@@ -187,6 +187,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 			}
 			
 			void addCache(final List<TimelineItem> newLoadedItems) {
+				Log.d(getClass().getSimpleName(), "addCache");
 				List<TweetDto> tweets = new ArrayList<TweetDto>();
 				int count = SettingUtil.getTimelineCount();
 				int len = timeline.size() > count ? count : timeline.size();
@@ -198,6 +199,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 			}
 
 			void refreshCache(final List<TimelineItem> timeline) {
+				Log.d(getClass().getSimpleName(), "refreshCache");
 				List<TweetDto> tweets = new ArrayList<TweetDto>();
 				int count = SettingUtil.getTimelineCount();
 				int len = timeline.size() > count ? count : timeline.size();

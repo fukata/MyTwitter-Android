@@ -66,9 +66,8 @@ public class TweetDao extends BaseDao {
 		try {
 			db.beginTransaction();
 			
-			// delete tweet
-			String deleteSql = "DELETE FROM " + TweetSchema.TABLE + " WHERE tweet_type = ?";
-			db.rawQuery(deleteSql, new String[]{ String.valueOf(tweetType.getType()) }).close();
+			// delete all tweet
+			db.delete(TweetSchema.TABLE, "tweet_type = ?", new String[]{ String.valueOf(tweetType.getType()) });
 			
 			for (TweetDto tweet : tweets) {
 				ContentValues values = new ContentValues();
