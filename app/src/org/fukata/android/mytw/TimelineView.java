@@ -85,6 +85,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		//キャッシュのtweetsの中での最新のstatusIdを取得する。
 		if (tweets.size() > 0) {
 			TweetDto tweet = tweets.get(0); //最初のレコードが最新
+			this.lastStatusId = tweet.statusId;
 			this.latestStatusId = tweet.statusId;
 		}
 	}
@@ -316,7 +317,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 
 	void doResume() {
 		Log.d(getClass().getSimpleName(), "doResume");
-		boolean noCachedTimeline = this.lastStatusId == null; //キャッシュが無い場合にtrueとなる
+		boolean noCachedTimeline = this.latestStatusId == null; //キャッシュが無い場合にtrueとなる
 		if (isFirstLoad && noCachedTimeline) {
 			loadTimeline(LoadMode.REFRESH);
 		} else {
