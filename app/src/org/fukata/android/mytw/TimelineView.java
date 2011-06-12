@@ -84,8 +84,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		}
 		//キャッシュのtweetsの中での最新のstatusIdを取得する。
 		if (tweets.size() > 0) {
-			this.oldestStatusId = tweets.get(0).statusId;
-			this.latestStatusId = tweets.get(tweets.size() - 1).statusId;
+			this.oldestStatusId = tweets.get(tweets.size() - 1).statusId;
+			this.latestStatusId = tweets.get(0).statusId;
 		}
 	}
 
