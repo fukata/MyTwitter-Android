@@ -120,7 +120,6 @@ public class Twitter {
 		try {
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
-			Log.d(getClass().getSimpleName(), xml);
 			XStream xStream = new XStream(); //initialize.
 			xStream.alias("xml", Status.class);
 			xStream.alias("user", User.class);
@@ -199,6 +198,7 @@ public class Twitter {
 				item.setUsername(status.getUser().getScreenname());
 				item.setUserId(status.getUser().getId());
 				item.setSource(status.getSource());
+				item.setInReplytoStatusId(status.getInreplytostatusid());
 				item.setCreatedAt( new Date(status.getCreatedat()) );
 				list.add(item);
 			}
@@ -266,6 +266,7 @@ public class Twitter {
 				item.setUsername(status.getSenderscreenname());
 				item.setUserId(status.getSenderid());
 				item.setSource(status.getSource());
+				item.setInReplytoStatusId(status.getInreplytostatusid());
 				item.setCreatedAt( new Date(status.getCreatedat()) );
 				list.add(item);
 			}

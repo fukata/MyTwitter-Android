@@ -447,10 +447,17 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						}
 					} else if (TimelineMenuOption.MENTIONED_FOR == which) {
 						TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
-						AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
-						bld.setTitle(mentionFor.getUsername() + " " + PrettyDateUtil.toString(mentionFor.getCreatedAt()));
-						bld.setMessage(mentionFor.getStatus());
-						bld.show();
+						if (mentionFor != null) {
+							AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
+							bld.setTitle(mentionFor.getUsername() + " " + PrettyDateUtil.toString(mentionFor.getCreatedAt()));
+							bld.setMessage(mentionFor.getStatus());
+							bld.show();
+						} else {
+							Toast.makeText(
+									parentActivity.getApplicationContext(), 
+									"ERROR: failed to retreive a mention. " + item.getInReplytoStatusId(), 
+									Toast.LENGTH_LONG).show();
+						}
 					}
 				}
 
@@ -470,7 +477,9 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		}
 	}
 	
-	//タイムラインのアイテムの長押しメニューの項目定義
+	/**
+	 * タイムラインのアイテムの長押しメニューの項目定義
+	 */
 	enum TimelineMenuOption {
 		RETWEET(R.string.retweet),
 		RETWEET_WITH_COMMENT(R.string.retweet_with_comment),
