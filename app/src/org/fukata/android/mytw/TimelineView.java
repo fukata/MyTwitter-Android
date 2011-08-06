@@ -11,6 +11,7 @@ import org.fukata.android.exandroid.util.StringUtil;
 import org.fukata.android.mytw.TimelineActivity.LoadMode;
 import org.fukata.android.mytw.database.dto.TweetDto;
 import org.fukata.android.mytw.database.schema.TweetSchema.TweetType;
+import org.fukata.android.mytw.util.PrettyDateUtil;
 import org.fukata.android.mytw.util.SettingUtil;
 import org.fukata.android.mytw.util.StringMatchUtils;
 import org.fukata.android.mytw.util.StringUtils;
@@ -447,8 +448,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 					} else if (TimelineMenuOption.MENTIONED_FOR == which) {
 						TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
 						AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
-						bld.setTitle(mentionFor.getUsername() + " " + mentionFor.getCreatedAt());
-						bld.setMessage(mentionFor.getSource());
+						bld.setTitle(mentionFor.getUsername() + " " + PrettyDateUtil.toString(mentionFor.getCreatedAt()));
+						bld.setMessage(mentionFor.getStatus());
 						bld.show();
 					}
 				}
