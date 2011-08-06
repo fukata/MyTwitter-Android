@@ -30,10 +30,8 @@ import com.thoughtworks.xstream.XStream;
 
 public class Twitter {
 	static final String CHARSET = "UTF-8";
-	XStream xStream;
 	
 	public Twitter() {
-		xStream = new XStream();
 	}
 	
 	private String getApiPrefix() {
@@ -89,6 +87,7 @@ public class Twitter {
 		try {
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
+			XStream xStream = new XStream();
 			xStream.alias("xml", ArrayList.class);
 			xStream.alias("item", Status.class);
 			xStream.alias("user", User.class);
@@ -122,7 +121,7 @@ public class Twitter {
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
 			Log.d(getClass().getSimpleName(), xml);
-			xStream = new XStream(); //initialize.
+			XStream xStream = new XStream(); //initialize.
 			xStream.alias("xml", Status.class);
 			xStream.alias("user", User.class);
 			Status status = (Status) xStream.fromXML(xml);
@@ -187,6 +186,7 @@ public class Twitter {
 		try {
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
+			XStream xStream = new XStream();
 			xStream.alias("xml", ArrayList.class);
 			xStream.alias("item", Status.class);
 			xStream.alias("user", User.class);
@@ -253,6 +253,7 @@ public class Twitter {
 		try {
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
+			XStream xStream = new XStream();
 			xStream.alias("xml", ArrayList.class);
 			xStream.alias("item", Status.class);
 			xStream.alias("user", User.class);
@@ -332,6 +333,7 @@ public class Twitter {
 		try {
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
+			XStream xStream = new XStream();
 			xStream.alias("xml", User.class);
 			user = (User) xStream.fromXML(xml);
 		} catch (Exception e) {
