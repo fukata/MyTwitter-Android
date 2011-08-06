@@ -40,4 +40,6 @@
     <string name="jump_to">Jump to %s</string>
 	<string name="favorites">Favorites</string>
 	<string name="favorites_successful">Favorites Successful</string>
+
+<string name="mentioned_for">Mentioned for</string>
 </resources>

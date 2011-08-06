@@ -65,6 +65,7 @@ public final class R {
         public static final int font_size=0x7f060018;
         public static final int hello=0x7f060000;
         public static final int jump_to=0x7f060025;
+        public static final int mentioned_for=0x7f060028;
         public static final int more=0x7f060009;
         public static final int new_timeline=0x7f06000b;
         public static final int nodata=0x7f060002;

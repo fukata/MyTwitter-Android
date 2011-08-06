@@ -48,6 +48,7 @@ public class TweetDao extends BaseDao {
 				values.put(TweetSchema.USERNAME, tweet.username);
 				values.put(TweetSchema.USER_ID, tweet.userId);
 				values.put(TweetSchema.SOURCE, tweet.source);
+				values.put(TweetSchema.IN_REPLY_TO_STATUS_ID, tweet.inReplyToStatusId);
 				values.put(TweetSchema.CREATED_AT, tweet.createdAt.getTime());
 				values.put(TweetSchema.TWEET_TYPE, tweet.tweetType.getType());
 				values.put(TweetSchema.CUSTOM, tweet.custom);
@@ -76,6 +77,7 @@ public class TweetDao extends BaseDao {
 				values.put(TweetSchema.USERNAME, tweet.username);
 				values.put(TweetSchema.USER_ID, tweet.userId);
 				values.put(TweetSchema.SOURCE, tweet.source);
+				values.put(TweetSchema.IN_REPLY_TO_STATUS_ID, tweet.inReplyToStatusId);
 				values.put(TweetSchema.CREATED_AT, tweet.createdAt.getTime());
 				values.put(TweetSchema.TWEET_TYPE, tweet.tweetType.getType());
 				values.put(TweetSchema.CUSTOM, tweet.custom);
@@ -98,6 +100,7 @@ public class TweetDao extends BaseDao {
 		dto.username = cursor.getString( cursor.getColumnIndex(TweetSchema.USERNAME) );
 		dto.userId = cursor.getString( cursor.getColumnIndex(TweetSchema.USER_ID) );
 		dto.source = cursor.getString( cursor.getColumnIndex(TweetSchema.SOURCE) );
+		dto.inReplyToStatusId = cursor.getString( cursor.getColumnIndex(TweetSchema.IN_REPLY_TO_STATUS_ID) );
 		long createdAt = cursor.getLong( cursor.getColumnIndex(TweetSchema.CREATED_AT) );
 		dto.createdAt = createdAt == 0 ? null : new Date(createdAt);
 		dto.tweetType = TweetType.find( cursor.getInt( cursor.getColumnIndex(TweetSchema.TWEET_TYPE) ) );

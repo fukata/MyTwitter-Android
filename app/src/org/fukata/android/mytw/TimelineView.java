@@ -97,6 +97,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		item.setUsername(tweet.username);
 		item.setUserId(tweet.userId);
 		item.setSource(tweet.source);
+		item.setInReplytoStatusId(tweet.inReplyToStatusId);
 		item.setCreatedAt(tweet.createdAt);
 		
 		return item;
@@ -110,6 +111,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		dto.username = item.getUsername();
 		dto.userId = item.getUserId();
 		dto.source = item.getSource();
+		dto.inReplyToStatusId = item.getInReplytoStatusId();
 		dto.createdAt = item.getCreatedAt();
 		dto.tweetType = getTweetType();
 		
@@ -392,19 +394,6 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		ListView optionsView;
 		ArrayAdapter<String> optionsAdapter;
 		Activity activity;
-		List<String> urls;
-		static final int OPTION_RETWEET = 0;
-		static final int OPTION_RETWEET_WITH_COMMENT = 1;
-		static final int OPTION_REPLY = 2;
-		static final int OPTION_FAVORITES = 3;
-		static final int OPTION_URLS = 4;
-
-		final String[] options = {
-			parentActivity.getString(R.string.retweet), 
-			parentActivity.getString(R.string.retweet_with_comment),
-			parentActivity.getString(R.string.reply),
-			parentActivity.getString(R.string.favorites),
-		};
 
 		public ItemDialog(Activity activity) {
 			super(activity);
@@ -413,41 +402,34 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		}
 		
 		public void show(final TimelineItem item) {
-			String[] fixedOptions = options;
-			String source = item.getStatus();
-			urls = StringMatchUtils.getUrls(source);
-			if (urls.size() > 0) {
-				List<String> opList = new ArrayList<String>();
-				for (String elm : options) {
-					opList.add(elm);
-				}
-				opList.add(parentActivity.getString(R.string.urls));
-				fixedOptions = opList.toArray(new String[0]);
-			}
-			setItems(fixedOptions, new DialogInterface.OnClickListener() {
+			final TimelineMenu menu = new TimelineMenu(item, parentActivity);
+			String[] options = menu.getMenuOptions();
+			
+			setItems(options, new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					if (OPTION_RETWEET==which) {
+				public void onClick(DialogInterface dialog, int index) {
+					TimelineMenuOption which = menu.getAction(index);
+					if (TimelineMenuOption.RETWEET == which) {
 						postRetweet(item);
-					} else if (OPTION_RETWEET_WITH_COMMENT==which) {
+					} else if (TimelineMenuOption.RETWEET_WITH_COMMENT==which) {
 						Intent intent = new Intent(Intent.ACTION_SEND);
 						intent.setClass(activity, UpdateStatusActivity.class);
 						intent.putExtra(Intent.EXTRA_TEXT, " RT @"+item.getUsername()+": "+item.getStatus());
 						intent.putExtra(MyTwitterApp.INTENT_EXTRA_SELECTION, MyTwitterApp.INTENT_EXTRA_SELECTION_HEAD);
 						parentActivity.startActivity(intent);
-					} else if (OPTION_REPLY==which) {
+					} else if (TimelineMenuOption.REPLY==which) {
 						Intent intent = new Intent(Intent.ACTION_SEND);
 						intent.setClass(activity, UpdateStatusActivity.class);
 						intent.putExtra(Intent.EXTRA_TEXT, "@"+item.getUsername()+" ");
 						intent.putExtra(MyTwitterApp.INTENT_EXTRA_SELECTION, MyTwitterApp.INTENT_EXTRA_SELECTION_END);
 						parentActivity.startActivity(intent);
-					} else if (OPTION_FAVORITES == which) {
+					} else if (TimelineMenuOption.FAVORITES == which) {
 						postFavorites(item);
-					} else if (OPTION_URLS == which) {
-						List<String> urls = ItemDialog.this.urls;
+					} else if (TimelineMenuOption.URLS == which) {
+						final List<String> urls = StringMatchUtils.getUrls(item.getStatus());
 						if (urls.size() == 1) {
 							//URLが一つだけなら、そのまま外部ブラウザで開く
-							openOnExternalWebBrowser(ItemDialog.this.urls.get(0));
+							openOnExternalWebBrowser(urls.get(0));
 						} else if (urls.size() > 1) {
 							//URLが複数存在するなら、更に選択肢を表示する。
 							String[] urlMenus = new String[urls.size()];
@@ -457,11 +439,17 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 							setItems(urlMenus, new DialogInterface.OnClickListener() {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
-									openOnExternalWebBrowser(ItemDialog.this.urls.get(which));
+									openOnExternalWebBrowser(urls.get(which));
 								}
 							});
 							create().show();
 						}
+					} else if (TimelineMenuOption.MENTIONED_FOR == which) {
+						TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
+						AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
+						bld.setTitle(mentionFor.getUsername() + " " + mentionFor.getCreatedAt());
+						bld.setMessage(mentionFor.getSource());
+						bld.show();
 					}
 				}
 
@@ -480,4 +468,60 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 			create().show();
 		}
 	}
+	
+	//タイムラインのアイテムの長押しメニューの項目定義
+	enum TimelineMenuOption {
+		RETWEET(R.string.retweet),
+		RETWEET_WITH_COMMENT(R.string.retweet_with_comment),
+		REPLY(R.string.reply),
+		FAVORITES(R.string.favorites),
+		URLS(R.string.urls),
+		MENTIONED_FOR(R.string.mentioned_for);
+		
+		private int resourceId;
+		private TimelineMenuOption(int resourceId) {
+			this.resourceId = resourceId;
+		}
+		public int getResourceId() {
+			return this.resourceId;
+		}
+	}
+	
+	/**
+	 * タイムライン長押しメニュー
+	 */
+	class TimelineMenu {
+		private List<TimelineMenuOption> options = new ArrayList<TimelineMenuOption>();
+		private TimelineActivity parentActivity;
+		
+		public TimelineMenu(TimelineItem item, TimelineActivity parentActivity) {
+			this.parentActivity = parentActivity;
+			//compose menu item.
+			options.add(TimelineMenuOption.RETWEET);
+			options.add(TimelineMenuOption.RETWEET_WITH_COMMENT);
+			options.add(TimelineMenuOption.REPLY);
+			options.add(TimelineMenuOption.FAVORITES);
+
+			List<String> urls = StringMatchUtils.getUrls(item.getStatus());
+			if (urls.size() > 0) {
+				options.add(TimelineMenuOption.URLS);
+			}
+			String inReplyToStatusId = item.getInReplytoStatusId();
+			Log.d(getClass().getSimpleName(), "inreplytostatusId:" + inReplyToStatusId);
+			if (inReplyToStatusId != null && inReplyToStatusId.length() > 0) {
+				options.add(TimelineMenuOption.MENTIONED_FOR);
+			}
+		}
+		public String[] getMenuOptions() {
+			List<String> options = new ArrayList<String>();
+			for (TimelineMenuOption o : this.options) {
+				options.add(this.parentActivity.getString(o.getResourceId()));
+			}
+			return options.toArray(new String[0]);
+		}
+		public TimelineMenuOption getAction(int index) {
+			return this.options.get(index);
+		}
+	}
+	
 }

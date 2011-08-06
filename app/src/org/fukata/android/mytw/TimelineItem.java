@@ -8,6 +8,7 @@ public class TimelineItem {
 	private String username;
 	private String userId;
 	private String source;
+	private String inReplytoStatusId;
 	private Date createdAt;
 
 	public String getStatusId() {
@@ -58,11 +59,20 @@ public class TimelineItem {
 		this.username = username;
 	}
 
+	public String getInReplytoStatusId() {
+		return inReplytoStatusId;
+	}
+
+	public void setInReplytoStatusId(String inReplytoStatusId) {
+		this.inReplytoStatusId = inReplytoStatusId;
+	}
+
 	@Override
 	public String toString() {
 		return "TimelineItem [statusId=" + statusId + ", status=" + status
 				+ ", username=" + username + ", userId=" + userId + ", source="
-				+ source + ", createdAt=" + createdAt + "]";
+				+ source + ", inReplytoStatusId=" + inReplytoStatusId
+				+ ", createdAt=" + createdAt + "]";
 	}
 
 }

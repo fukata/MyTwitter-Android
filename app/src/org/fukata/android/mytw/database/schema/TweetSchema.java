@@ -9,6 +9,7 @@ public enum TweetSchema {
 	public static final String USERNAME = "username";
 	public static final String USER_ID = "user_id";
 	public static final String SOURCE = "source";
+	public static final String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
 	public static final String CREATED_AT = "created_at";
 	public static final String TWEET_TYPE = "tweet_type";
 	public static final String CUSTOM = "custom";

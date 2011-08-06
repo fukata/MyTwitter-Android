@@ -11,6 +11,7 @@ public class TweetDto {
 	public String username;
 	public String userId;
 	public String source;
+	public String inReplyToStatusId;
 	public Date createdAt;
 	public TweetSchema.TweetType tweetType;
 	public String custom;
@@ -19,7 +20,8 @@ public class TweetDto {
 	public String toString() {
 		return "TweetDto [id=" + id + ", statusId=" + statusId + ", status="
 				+ status + ", username=" + username + ", userId=" + userId
-				+ ", source=" + source + ", createdAt=" + createdAt
-				+ ", tweetType=" + tweetType + ", custom=" + custom + "]";
+				+ ", source=" + source + ", inReplyToStatusId=" + inReplyToStatusId
+				+ ", createdAt=" + createdAt + ", tweetType=" + tweetType
+				+ ", custom=" + custom + "]";
 	}
 }

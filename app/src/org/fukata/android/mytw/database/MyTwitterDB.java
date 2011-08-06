@@ -11,7 +11,7 @@ public class MyTwitterDB extends SQLiteOpenHelper {
 	final static String TAG = MyTwitterDB.class.getSimpleName();
 	
 	final static String DB_NAME = "mytw.db";
-	final static int DB_VERSION = 1;
+	final static int DB_VERSION = 2;
 
 	static MyTwitterDB db;
 	
@@ -41,6 +41,7 @@ public class MyTwitterDB extends SQLiteOpenHelper {
 					TweetSchema.USERNAME + " TEXT, " + 
 					TweetSchema.USER_ID + " TEXT, " + 
 					TweetSchema.SOURCE + " TEXT, " + 
+					TweetSchema.IN_REPLY_TO_STATUS_ID + " TEXT, " + 
 					TweetSchema.CREATED_AT + " INTEGER, " +
 					TweetSchema.TWEET_TYPE + " INTEGER, " +
 					TweetSchema.CUSTOM + " TEXT " +
@@ -55,8 +56,12 @@ public class MyTwitterDB extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
-
+		Log.i(getClass().getSimpleName(), "Schema Update old:" + oldVersion + " new:" + newVersion);
+		if( oldVersion == 1 && newVersion == 2 ) {
+            db.execSQL("ALTER TABLE " + TweetSchema.TABLE + " ADD COLUMN " 
+                + TweetSchema.IN_REPLY_TO_STATUS_ID + " TEXT"
+                + ";" );
+		}
 	}
 
 }

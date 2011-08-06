@@ -23,6 +23,8 @@ import org.fukata.android.mytw.twitter.rs.Status;
 import org.fukata.android.mytw.twitter.rs.User;
 import org.fukata.android.mytw.util.SettingUtil;
 
+import android.util.Log;
+
 import com.thoughtworks.xstream.XStream;
 
 
@@ -99,15 +101,47 @@ public class Twitter {
 				item.setUsername(status.getUser().getScreenname());
 				item.setUserId(status.getUser().getId());
 				item.setSource(status.getSource());
+				item.setInReplytoStatusId(status.getInreplytostatusid());
 				item.setCreatedAt( new Date(status.getCreatedat()) );
 				list.add(item);
 			}
 		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
 		}
 		
 		return list;
 	} 
 	
+	public TimelineItem show(String statusId) {
+		List<TimelineItem> list = new ArrayList<TimelineItem>();
+		DefaultHttpClient client = new DefaultHttpClient();
+		String url = getApiPrefix()+"/statuses/show?id=" + statusId;
+		HttpGet method = new HttpGet(url);
+		String xml = null;
+		try {
+			HttpResponse response = client.execute(method);
+			xml = EntityUtils.toString(response.getEntity(), CHARSET);
+			Log.d(getClass().getSimpleName(), xml);
+			xStream = new XStream(); //initialize.
+			xStream.alias("xml", Status.class);
+			xStream.alias("user", User.class);
+			Status status = (Status) xStream.fromXML(xml);
+			TimelineItem item = new TimelineItem();
+			item.setStatusId(status.getId());
+			item.setStatus(status.getText());
+			item.setUsername(status.getUser().getScreenname());
+			item.setUserId(status.getUser().getId());
+			item.setSource(status.getSource());
+			item.setInReplytoStatusId(status.getInreplytostatusid());
+			item.setCreatedAt( new Date(status.getCreatedat()) );
+			list.add(item);
+			return item;
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+		}
+		return null;
+	} 
+
 	// ===============================================================
 	// statuses/mentions
 	// ===============================================================
@@ -169,6 +203,7 @@ public class Twitter {
 				list.add(item);
 			}
 		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
 		}
 		
 		return list;
@@ -234,6 +269,7 @@ public class Twitter {
 				list.add(item);
 			}
 		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
 		}
 		
 		return list;
@@ -253,6 +289,7 @@ public class Twitter {
 			HttpResponse response = client.execute(method);
 			return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
 			return false;
 		}
 	}
@@ -298,6 +335,7 @@ public class Twitter {
 			xStream.alias("xml", User.class);
 			user = (User) xStream.fromXML(xml);
 		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
 		}
 		
 		return user;
