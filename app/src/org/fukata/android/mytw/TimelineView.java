@@ -25,6 +25,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -55,6 +57,8 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	boolean isFirstLoad = true;
 	ItemDialog itemDialog;
 	NotificationManager notificationManager;
+	
+	Handler handler = new Handler();
 	
 	public TimelineView(Context context, TimelineActivity activity) {
 		super(context);
@@ -446,18 +450,28 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 							create().show();
 						}
 					} else if (TimelineMenuOption.MENTIONED_FOR == which) {
-						TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
-						if (mentionFor != null) {
-							AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
-							bld.setTitle(mentionFor.getUsername() + " " + PrettyDateUtil.toString(mentionFor.getCreatedAt()));
-							bld.setMessage(mentionFor.getStatus());
-							bld.show();
-						} else {
-							Toast.makeText(
-									parentActivity.getApplicationContext(), 
-									"ERROR: failed to retreive a mention. " + item.getInReplytoStatusId(), 
-									Toast.LENGTH_LONG).show();
-						}
+						(new Thread(new Runnable() {
+							@Override
+							public void run() {
+								handler.post(new Runnable() {
+									@Override
+									public void run() {
+										TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
+										if (mentionFor != null) {
+											AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
+											bld.setTitle(mentionFor.getUsername() + " " + PrettyDateUtil.toString(mentionFor.getCreatedAt()));
+											bld.setMessage(mentionFor.getStatus());
+											bld.show();
+										} else {
+											Toast.makeText(
+													parentActivity.getApplicationContext(), 
+													"ERROR: failed to retreive a mention. " + item.getInReplytoStatusId(), 
+													Toast.LENGTH_LONG).show();
+										}
+									}
+								});							
+							}
+						})).start();
 					}
 				}
 
