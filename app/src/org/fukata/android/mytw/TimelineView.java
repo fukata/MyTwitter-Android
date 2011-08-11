@@ -25,7 +25,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -453,10 +452,11 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 						(new Thread(new Runnable() {
 							@Override
 							public void run() {
+								final TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
+
 								handler.post(new Runnable() {
 									@Override
 									public void run() {
-										TimelineItem mentionFor = parentActivity.twitter.show(item.getInReplytoStatusId());
 										if (mentionFor != null) {
 											AlertDialog.Builder bld = new AlertDialog.Builder(parentActivity);
 											bld.setTitle(mentionFor.getUsername() + " " + PrettyDateUtil.toString(mentionFor.getCreatedAt()));
