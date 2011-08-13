@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -56,7 +57,7 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 	boolean isFirstLoad = true;
 	ItemDialog itemDialog;
 	NotificationManager notificationManager;
-	
+		
 	Handler handler = new Handler();
 	
 	public TimelineView(Context context, TimelineActivity activity) {
@@ -352,6 +353,15 @@ public class TimelineView extends ListView implements View.OnClickListener, OnIt
 		itemDialog.show(item);
 		return false;
 	}
+	
+	@Override
+    public boolean onTouchEvent(MotionEvent event) {
+		if (event.getAction() == MotionEvent.ACTION_UP && this.getScrollY() < -60) {
+			// 上にスクロールして引っ張ってる状態
+			loadTimeline(LoadMode.REFRESH);
+		}
+		return super.onTouchEvent(event);
+    }
 	
 //	CharSequence getTitle() {
 //		return parentActivity.getString(R.string.title_home);

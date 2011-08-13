@@ -12,6 +12,7 @@ import org.fukata.android.mytw.util.SettingUtil;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -42,7 +43,32 @@ public class UpdateStatusActivity extends Activity implements OnClickListener {
 		updateStatus.setOnClickListener(this);
 		
 		updateStatusLoader = new ProcessLoader(this);
-		twitter = new Twitter();
+		final Activity ac = this;
+		final Handler handler = new Handler();
+		twitter = new Twitter(
+			new Runnable() {
+				@Override
+				public void run() {
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							ac.setTitle(ac.getTitle() + " --- loading...");
+						}
+					});
+				}
+			},
+			new Runnable() {
+				@Override
+				public void run() {
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							ac.setTitle(ac.getString(R.string.app_name));
+						}
+					});
+				}
+			}
+		);
 		status = (EditText) findViewById(R.id.status);
 		status.addTextChangedListener(new StatusWatcher());
 		

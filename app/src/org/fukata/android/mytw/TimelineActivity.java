@@ -13,6 +13,8 @@ import android.app.SearchManager;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +46,32 @@ public class TimelineActivity extends TabActivity implements TabHost.TabContentF
 		super.onCreate(savedInstanceState);
 		SettingUtil.init(this);
 		timelineLoader = new ProcessLoader(this);
-		twitter = new Twitter();
+		final TabActivity ac = this;
+		final Handler handler = new Handler();
+		twitter = new Twitter(
+			new Runnable() {
+				@Override
+				public void run() {
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							ac.setTitle(ac.getTitle() + " --- loading...");
+						}
+					});
+				}
+			},
+			new Runnable() {
+				@Override
+				public void run() {
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							ac.setTitle(ac.getString(R.string.app_name));
+						}
+					});
+				}
+			}
+		);
 		tweetDao = new TweetDao(getApplicationContext());
 		
 		// init timeline

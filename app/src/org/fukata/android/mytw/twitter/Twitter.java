@@ -30,10 +30,22 @@ import com.thoughtworks.xstream.XStream;
 
 public class Twitter {
 	static final String CHARSET = "UTF-8";
+	private Runnable preProcess;
+	private Runnable postProcess;
 	
 	public Twitter() {
 	}
-	
+
+	/**
+	 * データ取得前後の処理を登録するためのコンストラクタ
+	 * @param preProcess 前処理
+	 * @param postProcess 後処理
+	 */
+	public Twitter(Runnable preProcess, Runnable postProcess) {
+		this.preProcess = preProcess;
+		this.postProcess = postProcess;
+	}
+
 	private String getApiPrefix() {
 		String url = SettingUtil.getApiServerUrl();
 		if (StringUtil.isNotBlank(url) && url.endsWith("/")) {
@@ -41,7 +53,17 @@ public class Twitter {
 		}
 		return url;
 	}
-	
+
+	private void pre() {
+		if (this.preProcess == null) return;
+		new Thread(this.preProcess).start();
+	}
+
+	private void post() {
+		if (this.postProcess == null) return;
+		new Thread(this.postProcess).start();
+	}
+
 	// ===============================================================
 	// statuses/home_timeline
 	// ===============================================================
@@ -85,6 +107,7 @@ public class Twitter {
 		HttpGet method = new HttpGet(url.toString());
 		String xml = null;
 		try {
+			pre();
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
 			XStream xStream = new XStream();
@@ -106,6 +129,8 @@ public class Twitter {
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
+		} finally {
+			post();
 		}
 		
 		return list;
@@ -118,6 +143,7 @@ public class Twitter {
 		HttpGet method = new HttpGet(url);
 		String xml = null;
 		try {
+			pre();
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
 			XStream xStream = new XStream(); //initialize.
@@ -136,6 +162,8 @@ public class Twitter {
 			return item;
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
+		} finally {
+			post();
 		}
 		return null;
 	} 
@@ -183,6 +211,7 @@ public class Twitter {
 		HttpGet method = new HttpGet(url.toString());
 		String xml = null;
 		try {
+			pre();
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
 			XStream xStream = new XStream();
@@ -204,6 +233,8 @@ public class Twitter {
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
+		} finally {
+			post();
 		}
 		
 		return list;
@@ -251,6 +282,7 @@ public class Twitter {
 		HttpGet method = new HttpGet(url.toString());
 		String xml = null;
 		try {
+			pre();
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
 			XStream xStream = new XStream();
@@ -272,6 +304,8 @@ public class Twitter {
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
+		} finally {
+			post();
 		}
 		
 		return list;
@@ -282,6 +316,7 @@ public class Twitter {
 		DefaultHttpClient client = new DefaultHttpClient(params);
 		HttpPost method = new HttpPost(getApiPrefix() + apiPath);
 		try {
+			pre();
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 			for (String key : map.keySet()) {
 				parameters.add(new BasicNameValuePair(key, map.get(key)));				
@@ -293,6 +328,8 @@ public class Twitter {
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
 			return false;
+		} finally {
+			post();
 		}
 	}
 
@@ -332,6 +369,7 @@ public class Twitter {
 		
 		User user = null;
 		try {
+			pre();
 			HttpResponse response = client.execute(method);
 			xml = EntityUtils.toString(response.getEntity(), CHARSET);
 			XStream xStream = new XStream();
@@ -339,6 +377,8 @@ public class Twitter {
 			user = (User) xStream.fromXML(xml);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
+		} finally {
+			post();
 		}
 		
 		return user;
